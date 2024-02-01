@@ -1,6 +1,6 @@
 # Introductions Are Awkward
 
-This repo stores the code for my game, Introductions Are Awkward. It's built using Flask and React.
+This repo stores the code for my game, Introductions Are Awkward. It's built using Flask.
 Describe your friends and try to have almost everyone guess who your description is about. 
 You don't want to be too specific though, because if everyone gets it then you get no points!
 
@@ -13,8 +13,11 @@ python3 -m venv venv
 . venv/bin/activate
 python3 -m pip install -r Game/requirements.txt
 '''
+2. Running the app
+```
+export FLASK_APP=Game/app.py
+flask run
+```
 
 
 ## Goals of this project and what I hope to learn
-
-1. I've never used React before, I plan to learn how to use it with this project.
