@@ -11,13 +11,12 @@ Open a terminal, navigate to the root of this directory and run the following:
 '''
 python3 -m venv venv
 . venv/bin/activate
-python3 -m pip install -r Game/requirements.txt
+python3 -m pip install -r requirements.txt
 '''
 2. Running the app
 ```
-export FLASK_APP=Game/app.py
+export FLASK_APP=app.py
 flask run
 ```
-
 
 ## Goals of this project and what I hope to learn
