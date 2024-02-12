@@ -1,7 +1,34 @@
 let api_url = "http://127.0.0.1:5000"
 
 async function main() {
-    await build_landing()
+
+    // If the user has already logged in and is in the middle of the game
+    if (sessionStorage.getItem("username") != null) {
+
+        let response = await fetch(`/${sessionStorage.getItem("game_key")}/get_state`)
+        let state = await response.json()
+        let waiting = sessionStorage.getItem("waiting")
+
+        switch (state){
+            case 1:
+                await build_waiting_for_state(2, "Waiting For All Players To Be Ready")
+                build_harvesting_page()
+                break
+            case 2:
+                //TODO When we have more states fleshed out
+
+        }
+
+    // If the user has created a game but has not inputted a username yet
+    } else if (sessionStorage.getItem("game_key") != null) {
+        await build_login()
+
+    // If the user is new
+    } else {
+        sessionStorage.setItem("waiting", "false")
+        await build_landing()
+
+    }
     console.log("Loaded JS")
 }
 
@@ -22,6 +49,7 @@ async function build_landing() {
     new_game_button.addEventListener("click", () => build_new_game())
 
     let main_section = document.getElementById("main")
+    main_section.innerHTML = ""
     main_section.append(join_button, new_game_button)
 
 }
@@ -81,9 +109,17 @@ async function build_login() {
         join_game()
     })
 
+    let back_button = document.createElement("button")
+    back_button.innerHTML = "Back"
+    back_button.id = "back_button"
+    back_button.addEventListener("click", () => {
+        sessionStorage.clear()
+        build_landing()
+    })
+
     let main_section = document.getElementById("main")
     main_section.innerHTML = ""
-    main_section.append(username_label, username_input, key_label, key_input, username_submit)
+    main_section.append(username_label, username_input, key_label, key_input, username_submit, back_button)
 
 }
 
@@ -106,10 +142,11 @@ async function join_game() {
 
     let response_msg = await response.json()
     if (response_msg === "Initial User") {
+        sessionStorage.setItem("username", username)
         build_ready_up_button()
     }
     else if (response_msg === "Success") {
-        sessionStorage.setItem("Username", username)
+        sessionStorage.setItem("username", username)
         await build_waiting_for_state(2, "Waiting For All Players To Be Ready")
         build_harvesting_page()
     } else if (response_msg === "Username Taken") {
@@ -131,7 +168,7 @@ async function build_waiting_for_state(state, waiting_text){
     main_section.appendChild(text_element)
 
     while (true){
-        let response = await fetch("get_state")
+        let response = await fetch(`/${sessionStorage.getItem("game_key")}/get_state`)
         let response_msg = await response.json()
 
         if (response_msg === state){
@@ -139,8 +176,8 @@ async function build_waiting_for_state(state, waiting_text){
         }
 
         if (state === 1) {
-            // We are waiting for all players to log in, show logged in players
-
+            // TODO We are waiting for all players to log in, show logged in players
+            // TODO if we are player one, put the ready up button here
         }
 
         await sleep(1000)
@@ -179,5 +216,6 @@ async function submit_ready(){
 function build_harvesting_page(){
     let main_section = document.getElementById("main")
     main_section.innerHTML = "Harvesting Time!"
+    // TODO Build harvesting page and api
 }
 
