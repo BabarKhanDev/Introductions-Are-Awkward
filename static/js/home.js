@@ -139,15 +139,18 @@ async function join_game() {
         ),
     })
 
+
     let response_msg = await response.json()
     if (response_msg === "Initial User") {
         sessionStorage.setItem("username", username)
-        build_ready_up_button()
+        sessionStorage.setItem("initialUser", "true")
+        await build_waiting_for_state(2, "Waiting For All Players To Join")
     }
     else if (response_msg === "Success") {
         sessionStorage.setItem("username", username)
+        sessionStorage.setItem("initialUser", "false")
         await build_waiting_for_state(2, "Waiting For All Players To Join")
-        build_harvesting_page()
+        await build_harvesting_page()
     } else if (response_msg === "Username Taken") {
         alert("Username is taken, try again")
     } else if (response_msg === "Invalid Key") {
@@ -157,83 +160,11 @@ async function join_game() {
     }
 }
 
-async function build_waiting_for_state(state, waiting_text){
-
-    let text_element = document.createElement("p")
-    text_element.innerHTML = waiting_text
-    let main_section = document.getElementById("main")
-    main_section.innerHTML = ""
-    main_section.append(text_element)
-
-    if (state === 2) {
-        // TODO if we are player one, put the ready up button here
-
-        let game_key_display = document.createElement("div")
-        game_key_display.id = "game_key_display"
-        game_key_display.innerHTML = `Game Key: ${sessionStorage.getItem("game_key")}`
-        main_section.prepend(game_key_display)
-
-        let player_list = document.createElement("div")
-        player_list.id = "player_list"
-
-        main_section.append(player_list)
-    }
-
-    while (true){
-        let response = await fetch(`/${sessionStorage.getItem("game_key")}/get_state`)
-        let response_msg = await response.json()
-
-        if (response_msg === state){
-            return
-        }
-
-        if (state === 2){
-            // Show the logged in players
-            let response = await fetch(`/${sessionStorage.getItem("game_key")}/all_players`)
-            let players = await response.json()
-
-            let player_list = document.getElementById("player_list")
-            if (players.players.length !== player_list.children.length){
-
-                player_list.innerHTML = ""
-                players.players.forEach((player) => {
-                    let player_name = document.createElement("p")
-                    player_name.innerHTML = player
-                    player_list.append(player_name)
-                })
-
-            }
-
-
-        }
-
-        await sleep(1000)
-    }
-}
-
-function build_ready_up_button(){
-
-    let game_key = sessionStorage.getItem("game_key")
-    let game_key_display = document.createElement("div")
-    game_key_display.id = "game_key_display"
-    game_key_display.innerHTML = `Game Key: ${game_key}`
-    game_key_display.setAttribute("value", game_key)
-
-    let ready_button = document.createElement("button")
-    ready_button.innerHTML = "All Players Ready"
-    ready_button.id = "ready_button"
-    ready_button.addEventListener("click", () => submit_ready())
-
-    let main_section = document.getElementById("main")
-    main_section.innerHTML = ""
-    main_section.append(game_key_display, ready_button)
-}
-
 async function submit_ready(){
     let response = await fetch(`/${sessionStorage.getItem("game_key")}/all_ready`)
     let response_msg = await response.json()
     if (response_msg === "success"){
-        build_harvesting_page()
+        await build_harvesting_page()
     }
     else{
         alert("Something went wrong, try again :(")
@@ -241,6 +172,24 @@ async function submit_ready(){
 }
 
 async function build_harvesting_page(){
+
+    // Get timer
+    let time_response = await fetch(`/${sessionStorage.getItem("game_key")}/timer_remaining`)
+    let timer_remaining = await time_response.json()
+    setTimeout(() => {alert("TIMER RAN OUT")}, timer_remaining)
+
+    // Set up clock
+    let main_section = document.getElementById("main")
+    main_section.innerHTML = ""
+    let clock = document.createElement("div")
+    clock.id = "clock"
+    clock.innerHTML = Math.floor(timer_remaining/1000 -1).toString()
+    main_section.prepend(clock)
+    setInterval(() => {
+        let clock = document.getElementById("clock")
+        let remaining_time = parseInt(clock.innerHTML)
+        clock.innerHTML = (remaining_time - 1).toString()
+    }, 1000);
 
     // Get a prompt
     let response = await fetch(`/${sessionStorage.getItem("game_key")}/get_prompt`, {
@@ -270,9 +219,7 @@ async function build_harvesting_page(){
     prompt_submit.innerHTML = "Submit"
     prompt_submit.addEventListener("click", () => submit_response())
 
-    let main_section = document.getElementById("main")
-    main_section.innerHTML = ""
-    main_section.append(prompt_section)
+    main_section.append(prompt_section, response_label, response_input, prompt_submit)
 }
 
 async function submit_response() {
@@ -282,3 +229,60 @@ async function submit_response() {
     await build_harvesting_page()
 }
 
+
+async function build_waiting_for_state(state, waiting_text){
+
+    let text_element = document.createElement("p")
+    text_element.innerHTML = waiting_text
+    let main_section = document.getElementById("main")
+    main_section.innerHTML = ""
+    main_section.append(text_element)
+
+    if (state === 2) {
+        let game_key_display = document.createElement("div")
+        game_key_display.id = "game_key_display"
+        game_key_display.innerHTML = `Game Key: ${sessionStorage.getItem("game_key")}`
+        main_section.prepend(game_key_display)
+
+        let player_list = document.createElement("div")
+        player_list.id = "player_list"
+
+        main_section.append(player_list)
+
+        if (sessionStorage.getItem("initialUser") === "true") {
+            let ready_button = document.createElement("button")
+            ready_button.innerHTML = "All Players Ready"
+            ready_button.id = "ready_button"
+            ready_button.addEventListener("click", () => submit_ready())
+            main_section.append(ready_button)
+        }
+
+    }
+
+    while (true){
+        let response = await fetch(`/${sessionStorage.getItem("game_key")}/get_state`)
+        let response_msg = await response.json()
+
+        if (response_msg === state){
+            return
+        }
+
+        if (state === 2){
+            // Show the logged in players
+            let response = await fetch(`/${sessionStorage.getItem("game_key")}/all_players`)
+            let players = await response.json()
+
+            let player_list = document.getElementById("player_list")
+            if (players.players.length !== player_list.children.length){
+
+                player_list.innerHTML = ""
+                players.players.forEach((player) => {
+                    let player_name = document.createElement("p")
+                    player_name.innerHTML = player
+                    player_list.append(player_name)
+                })
+            }
+        }
+        await sleep(1000)
+    }
+}

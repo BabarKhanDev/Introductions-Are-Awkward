@@ -20,3 +20,6 @@ flask run
 ```
 
 ## Goals of this project and what I hope to learn
+1. How to design UIs that look good
+2. How to create websites that work well on mobile and desktop
+3. How to host a website for anyone to use
