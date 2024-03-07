@@ -33,10 +33,11 @@ That is as follows:
     For example: "<username> is the one who _",
     on the client you have to fill in the answer using words from a subset of the bag of words.
 
-    The words that you can use are given over '/sample_bow'. It returns the following:
+    The words that you can use are given over '/sample_words'. It returns the following:
     ```json
     {
-      "bow": str[]
+      "target_user": str,
+      "words": str[]
     }
     ```
     The prompt is given over '/prompt_introduction'. It returns the following:
