@@ -22,7 +22,7 @@ export async function build_harvesting_page(){
             let time_response = await fetch(`/${sessionStorage.getItem("game_key")}/timer_remaining`)
             let timer_remaining = await time_response.json()
             let clock = document.getElementById("clock")
-            clock.innerHTML = Math.floor(timer_remaining/1000 -1).toString()
+            clock.innerHTML = Math.floor(timer_remaining/1000).toString()
         }, 1000);
         sessionStorage.setItem("clock_interval", my_interval.toString())
     }

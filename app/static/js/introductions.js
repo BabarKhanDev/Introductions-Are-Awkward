@@ -28,7 +28,7 @@ export async function build_introductions_page(){
 
     let target_user_section = document.createElement("p")
     target_user_section.id = "target_user_p"
-    target_user_section.innerHTML = `Please introduce ${target_user} to the rest of the group, you may only use the words below`
+    target_user_section.innerHTML = `Please introduce ${target_user} to the rest of the group using the words below`
 
     let word_section = document.createElement("div")
     word_section.id = "word_section"
