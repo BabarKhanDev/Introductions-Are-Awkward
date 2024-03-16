@@ -9,7 +9,7 @@ export async function build_login() {
 
     let username_input = document.createElement("input")
     username_input.maxLength = 15
-    username_input.placeholder = "max 15 chars"
+    username_input.placeholder = "Max 15 chars"
     username_input.id = "username_input"
 
     let key_label = document.createElement("label")
