@@ -5,10 +5,10 @@ import string
 from flask import Flask, request, render_template, jsonify, send_from_directory
 from flask_cors import CORS
 
-from app.scripts.User import User
 from app.scripts.GameDatum import GameDatum
 from app.scripts.GameStates import GameStates
 from app.scripts.PromptGenerator import PromptGenerator
+from app.scripts.Introduction import Introduction
 
 app = Flask(__name__)
 CORS(app)
@@ -71,7 +71,8 @@ def new_user(key):
     if username.lower() in [user.lower() for user in game_data[key].users]:
         return jsonify("Username Taken")
 
-    game_data[key].users = game_data[key].users + [User(username)]
+    game_data[key].add_user(username)
+
     if len(game_data[key].users) == 1:
         return jsonify("Initial User")
 
@@ -90,14 +91,18 @@ def get_state(key):
 @app.route('/<key>/all_ready')
 def all_ready(key):
     # This is called when all players have connected, and we can start the game
-    # We start a timer for the text harvesting stage, this is so that if anyone refreshes the page they
-    # can get an updated time remaining
+    # We start a timer for the text harvesting stage, this is so that if anyone refreshes the page they get an updated
+    # time remaining
     if not validate_key(key):
         return jsonify("Invalid key")
 
     global game_data
     game_data[key].state = GameStates.text_harvesting
     game_data[key].set_timer(61000)
+
+    # For testing enable this
+    game_data[key].set_timer(10000)
+
     return jsonify("success")
 
 
@@ -121,7 +126,7 @@ def all_players(key):
         return jsonify("Invalid key")
 
     global game_data
-    return jsonify({"players": [user.username for user in game_data[key].users]})
+    return jsonify({"players": game_data[key].users})
 
 
 @app.route('/<key>/kick_player', methods=["POST"])
@@ -142,9 +147,10 @@ def get_prompt(key):
 
     username = request.get_json()["username"]
     prompt = prompt_generator.prepare_prompt().split()
-    names = [user.username for user in game_data[key].users]
+    names = game_data[key].users[:]
     names.remove(username)
     target_user = random.choice(names)
+
     return jsonify({
         "target_user": target_user,
         "prompt": " ".join(word.replace("$name", target_user) for word in prompt)
@@ -160,8 +166,6 @@ def submit_prompt_answer(key):
     response = request.get_json()["answer"]
     target_user = request.get_json()["target_user"]
 
-    print(target_user, response)
-
     global game_data
     game_data[key].add_words(target_user, response)
 
@@ -174,17 +178,63 @@ def sample_words(key):
     if not validate_key(key):
         return jsonify('Invalid key')
 
-    # This is the players username
+    global game_data
     username = request.get_json()["username"]
 
-    global game_data
+    if username in game_data[key].user_introduction_words_map:
+        return game_data[key].user_introduction_words_map[username]
+
     users = game_data[key].users
     username_index = users.index(username)
-    target_user = users[username_index + game_data[key].round]
+    other_users = list(filter(lambda x: x != username, users))
 
+    # This is a bijective mapping of each user to a new user that isn't them
+    # It makes sure that everyone is picked and that everyone gets a unique user
+    goal_index = username_index + game_data[key].round
+    goal_index %= len(other_users)  # loop back round
+    target_user = other_users[goal_index]
     words = game_data[key].sample_words(target_user)
-    return jsonify({
+    game_data[key].user_introduction_words_map[username] = jsonify({
         "target_user": target_user,
         "words": words
     })
 
+    return game_data[key].user_introduction_words_map[username]
+
+
+@app.route('/<key>/submit_introduction', methods=["POST"])
+def submit_introduction(key):
+
+    if not validate_key(key):
+        return jsonify('Invalid key')
+
+    username = request.get_json()["username"]
+    target_player = request.get_json()["target_user"]
+    introduction = request.get_json()["introduction"]
+
+    global game_data
+    game_data[key].add_introduction(Introduction(username, target_player, introduction))
+
+    if len(game_data[key].introductions) == len(game_data[key].users):
+        game_data[key].state = GameStates.guessing_the_friend
+        game_data[key].user_introduction_words_map = {}
+    return jsonify("Success")
+
+
+@app.route('/<key>/get_round')
+def get_round(key):
+    if not validate_key(key):
+        return jsonify('Invalid key')
+
+    global game_data
+    return jsonify({"round": game_data[key].round})
+
+
+@app.route('/<key>/ready_players')
+def ready_players(key):
+    if not validate_key(key):
+        return jsonify('Invalid key')
+
+    global game_data
+    out = {introduction.username for introduction in game_data[key].introductions}
+    return jsonify({"ready_players": list(out)})

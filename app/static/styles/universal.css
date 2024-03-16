@@ -1,16 +1,49 @@
 :root {
     --blue: #577399;
-    --accent: #CA895F;
+    --accent: #ffdbbf;
     --mint: #B3EFB2;
     --green: #537A5A;
     --black: #251605;
 }
 
 body{
-    background-color: var(--mint);
     font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    font-style: normal;
     display:flex;
     justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    margin:0;
+    padding:0;
+}
+
+#header{
+    background-color: var(--mint);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:100%;
+}
+
+#title{
+    font-family: "Madimi One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: black;
+    text-align: center;
+    margin:0.3em 0 0.3em 0;
+}
+
+button {
+    font-family: "Madimi One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size:1.4em;
+
+    border: 0;
+    max-width: 10em;
+    border-radius: 4px;
 }
 
 #main{
@@ -20,6 +53,7 @@ body{
     justify-content: center;
     width:30%;
     height:90vh;
+    font-size:1.2em;
 }
 
 #main>*{
@@ -31,6 +65,18 @@ body{
 #main>label{
     padding-bottom:0;
     margin-bottom:0;
+    font-family: "Madimi One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size:1.4em;
+}
+
+#username_input, #key_input {
+    background-color: ButtonFace;
+    border:0;
+    border-radius: 4px;
+    font-size:1.2em;
+    padding:0.3em;
 }
 
 #main>p{
@@ -45,6 +91,14 @@ body{
     text-align: center;
     margin-bottom: 1em;
     font-weight: bold;
+    font-size:1.4em;
+}
+
+#player_list > p {
+    background-color: ButtonFace;
+    text-align: center;
+    padding: 0.3em 0 0.3em 0;
+    border-radius: 4px;
 }
 
 #clock{
@@ -67,4 +121,30 @@ body{
     100% {
         background-position: 0% 50%;
     }
+}
+
+#response_div, #word_section {
+    display:flex;
+    flex-wrap:wrap;
+    flex-direction: row;
+}
+
+#response_div > p {
+    margin: 0;
+    background-color: white;
+    font-size:small;
+}
+
+#word_section > p {
+    margin:0.3em;
+    background-color: white;
+    padding:0.2em;
+    font-size: small;
+}
+
+#word_section > p:hover {
+    margin: 0.3em;
+    background-color: #afafaf;
+    padding:0.2em;
+    font-size: small;
 }

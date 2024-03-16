@@ -1,25 +1,18 @@
-Describe the country of $country, as if you were $name
 From the perspective of $name, describe how you feel about $name
-Imagine that you are $name, describe how the colour $colour makes you feel
-Describe $name's ideal partner
+Describe $name's type
 What makes $name really happy?
 What makes $name really angry?
 What does $name want to do with their life?
 What do you think $name would say if they walked in on a $animal in their living room?
-What is $name's favourite thing about $animals?
-What would $name think about living in $country?
+What does $name think about $country?
 What is $name's go to pickup line?
 What is $name's favourite thing about $name
 You wake up as $name, what is the first thing you do?
 What is the most embarrassing thing that $name has ever done?
 What is $name’s dream job and why?
-If $name woke up in $country, what would they do there?
 If $name could go to any country, where would they go and what would they do there?
 What is the best advice that $name has ever received or given?
-What is $name’s biggest fear and how could they overcome it?
+What is $name’s biggest fear?
 What is something that $name is great at and something that they are terrible at?
 If $name had a superpower, what would it be and how would they use it?
-What is the most surprising thing that $name has ever learned?
-What is the most surprising thing that $name has yet to learn?
 What is $name’s secret talent or hobby?
-What would you do if you saw $name on tinder?

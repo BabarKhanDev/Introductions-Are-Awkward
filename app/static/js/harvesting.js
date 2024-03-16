@@ -1,22 +1,32 @@
+import {build_introductions_page} from "./introductions.js";
+
 export async function build_harvesting_page(){
+
+    // Clear Page
+    let main_section = document.getElementById("main")
+    main_section.innerHTML = ""
 
     // Get timer
     let time_response = await fetch(`/${sessionStorage.getItem("game_key")}/timer_remaining`)
     let timer_remaining = await time_response.json()
-    setTimeout(() => {alert("TIMER RAN OUT")}, timer_remaining)
 
     // Set up clock
-    let main_section = document.getElementById("main")
-    main_section.innerHTML = ""
     let clock = document.createElement("div")
     clock.id = "clock"
     clock.innerHTML = Math.floor(timer_remaining/1000 -1).toString()
     main_section.prepend(clock)
-    setInterval(() => {
-        let clock = document.getElementById("clock")
-        let remaining_time = parseInt(clock.innerHTML)
-        clock.innerHTML = (remaining_time - 1).toString()
-    }, 1000);
+
+    if (sessionStorage.getItem("clock_interval") === null) {
+        setTimeout(() => {build_introductions_page()}, timer_remaining)
+        let my_interval = setInterval(async () => {
+            let time_response = await fetch(`/${sessionStorage.getItem("game_key")}/timer_remaining`)
+            let timer_remaining = await time_response.json()
+            let clock = document.getElementById("clock")
+            clock.innerHTML = Math.floor(timer_remaining/1000 -1).toString()
+        }, 1000);
+        sessionStorage.setItem("clock_interval", my_interval.toString())
+    }
+
 
     // Get a prompt
     let response = await fetch(`/${sessionStorage.getItem("game_key")}/get_prompt`, {

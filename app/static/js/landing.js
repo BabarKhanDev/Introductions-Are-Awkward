@@ -41,8 +41,16 @@ async function build_new_game() {
     username_submit.id = "username_submit"
     username_submit.addEventListener("click", () => {join_game()})
 
+    let back_button = document.createElement("button")
+    back_button.innerHTML = "Back"
+    back_button.id = "back_button"
+    back_button.addEventListener("click", () => {
+        sessionStorage.clear()
+        build_landing()
+    })
+
     let main_section = document.getElementById("main")
     main_section.innerHTML = ""
-    main_section.append(game_key_display, username_label, username_input, username_submit)
+    main_section.append(game_key_display, username_label, username_input, username_submit, back_button)
 
 }
