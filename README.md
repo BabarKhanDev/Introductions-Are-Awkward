@@ -8,14 +8,16 @@ You don't want to be too specific though, because if everyone gets it then you g
 
 1. Set up environment
 Open a terminal, navigate to the root of this directory and run the following:
-'''
+
+```
 cd app
 python3 -m venv venv 
 . venv/bin/activate (linux) or ./venv/Scripts/activate (win)
 python3 -m pip install -e
 python3 -m pip install -r requirements.txt
-'''
-2. Running the app
+```
+
+1. Running the app
 ```
 export FLASK_APP=app.py
 flask run
