@@ -1,0 +1,124 @@
+:root {
+    --blue: #577399;
+    --button: #b7cbe6;
+    --button_light: #d9e1ec;
+    --accent: #b38f9c;
+    --mint: #B3EFB2;
+    --green: #537A5A;
+    --black: #251605;
+    --background: #f2fcf2;
+}
+
+#tutorial_modal {
+    display:flex;
+    flex-direction: column;
+
+    background-color: var(--background);
+    outline: 0px !important;
+    border: 0px;
+    position:relative;
+    height:90%;
+    width:90%;
+    border-radius:4px;
+
+    font-family: "Madimi One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+
+}
+
+#tutorial_modal_blur {
+    backdrop-filter: blur(6px);
+    width:100%;
+    height:100%;
+    position:absolute;
+    left:0px;
+    top:0px;
+}
+
+#tutorial_modal:focus, #tutorial_close:focus {
+    outline: 0px !important;
+    border: 0px;
+}
+
+#tutorial_close {
+    position: absolute;
+    bottom:1em;
+    right:1em;
+    background-color: var(--accent);
+    height:1.5em;
+}
+
+.slide {
+    align-self:center;
+
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    font-size:1.2em;
+    position:relative;
+
+    width:50%;
+    padding:1em;
+}
+
+.tutorial_display_DOM {
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    height:150%;
+
+    border: solid 1px black;
+    border-radius:4px;
+    padding:1em;
+}
+
+.tutorial_display_DOM>label{
+    padding-bottom:0;
+    margin-bottom:0;
+    font-family: "Madimi One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size:1.4em;
+}
+
+.tutorial_display_DOM *:not(.word_elem, .word_elem_display) {
+    padding-bottom: 0.1em;
+    margin-bottom: 0.5em;
+    width: 100%;
+}
+
+
+#slide_indicators {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    position: absolute;
+    bottom:1em;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height:1.5em;
+}
+
+.slide_indicator {
+    height:1em;
+    width:1em;
+    background-color: var(--mint);
+    border-radius: 8px;
+    margin: 0.1em;
+}
+
+.slide_indicator.active {
+    height:1em;
+    width:3em;
+    background-color: var(--green);
+}
+
+.slide_indicator:hover {
+    cursor:pointer;
+}

@@ -28,7 +28,7 @@ export async function build_introductions_page(){
 
     let target_user_section = document.createElement("p")
     target_user_section.id = "target_user_p"
-    target_user_section.innerHTML = `Please introduce ${target_user} to the rest of the group using the words below`
+    target_user_section.textContent = `Please introduce ${target_user} to the rest of the group using the words below`
 
     let word_section = document.createElement("div")
     word_section.id = "word_section"
@@ -36,11 +36,11 @@ export async function build_introductions_page(){
     words_list.forEach((word) => {
         let word_elem = document.createElement("p")
         word_elem.className = "word_elem"
-        word_elem.innerHTML = word
+        word_elem.textContent = word
         word_elem.addEventListener("click", () => {
             let word_elem_display = document.createElement("p")
             word_elem_display.className = "word_elem_display"
-            word_elem_display.innerHTML = `${word}&nbsp`
+            word_elem_display.textContent = `${word}\u00a0`
 
             let response_input = document.getElementById("response_div")
             response_input.value += `${word} `
@@ -50,21 +50,21 @@ export async function build_introductions_page(){
     })
 
     let response_label = document.createElement("label")
-    response_label.innerHTML = "Response"
+    response_label.textContent = "Response"
 
     let response_input = document.createElement("div")
     response_input.id = "response_div"
     response_input.value = ""
 
     let clear_response = document.createElement("button")
-    clear_response.innerHTML = "Clear"
+    clear_response.textContent = "Clear"
     clear_response.addEventListener("click", () => {
-        response_input.innerHTML = ""
+        response_input.textContent = ""
         response_input.value = ""
     })
 
     let prompt_submit = document.createElement("button")
-    prompt_submit.innerHTML = "Submit"
+    prompt_submit.textContent = "Submit"
     prompt_submit.addEventListener("click", () => submit_response())
 
     main_section.append(target_user_section, word_section, response_label, response_input, clear_response, prompt_submit)
