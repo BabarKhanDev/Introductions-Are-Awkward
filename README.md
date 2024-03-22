@@ -7,6 +7,7 @@ You don't want to be too specific though, because if everyone gets it then you g
 ## Installing and Running
 
 1. Set up environment
+
 Open a terminal, navigate to the root of this directory and run the following:
 
 ```
