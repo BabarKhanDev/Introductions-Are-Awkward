@@ -1,3 +1,5 @@
+let current_slide = 0
+
 export function tutorial_setup() {
 
     create_tutorial_modal()
@@ -21,6 +23,23 @@ function create_tutorial_modal() {
     let modal = document.createElement("dialog")
     modal.id = "tutorial_modal"
 
+    let modal_back = document.createElement("button")
+    modal_back.textContent = "Back"
+    modal_back.id = "tutorial_back"
+    modal_back.hidden = true
+    modal_back.addEventListener("click", () => {
+        document.getElementById("tutorial_next").hidden = false
+        show_slide(current_slide - 1)
+    })
+
+    let modal_next = document.createElement("button")
+    modal_next.textContent = "Next"
+    modal_next.id = "tutorial_next"
+    modal_next.addEventListener("click", () => {
+        document.getElementById("tutorial_back").hidden = false
+        show_slide(current_slide + 1)
+    })
+
     let modal_close = document.createElement("button")
     modal_close.textContent = "Close"
     modal_close.id = "tutorial_close"
@@ -29,10 +48,14 @@ function create_tutorial_modal() {
         document.getElementById("tutorial_modal_blur").setAttribute("hidden", true)
     })
 
+    let modal_buttons = document.createElement("div")
+    modal_buttons.id = "tutorial_buttons"
+    modal_buttons.append(modal_back, modal_next, modal_close)
+
     let modal_title = document.createElement("h1")
     modal_title.textContent = "How to play"
 
-    modal.append(modal_title, modal_close)
+    modal.append(modal_title, modal_buttons)
 
     // TODO once we have finished the rest of the game, make slides for it
     let slides = [
@@ -52,6 +75,7 @@ function create_tutorial_modal() {
 }
 
 function show_slide(slide_number) {
+
     // Hide active slide
     let slides = document.getElementsByClassName("slide")
     for (let item of slides) {
@@ -69,6 +93,16 @@ function show_slide(slide_number) {
 
     let indicator = document.getElementById(`slide_indicator_${slide_number}`)
     indicator.classList.add("active")
+
+    // Next and Back buttons
+    current_slide = slide_number
+    document.getElementById("tutorial_next").hidden = (
+        slide_number === document.getElementsByClassName("slide_indicator").length - 1
+    )
+
+    document.getElementById("tutorial_back").hidden = (
+        slide_number === 0
+    )
 }
 
 function create_slide(display, caption, slide_number) {

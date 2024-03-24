@@ -58,6 +58,8 @@ export async function join_game() {
         ),
     })
 
+    document.getElementById("tutorial_modal").remove()
+    document.getElementById("tutorial_modal_blur").remove()
 
     let response_msg = await response.json()
     if (response_msg === "Initial User") {

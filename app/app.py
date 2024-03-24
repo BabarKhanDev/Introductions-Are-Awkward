@@ -179,6 +179,8 @@ def sample_words(key):
         return jsonify('Invalid key')
 
     global game_data
+
+    # Sample words now
     username = request.get_json()["username"]
 
     if username in game_data[key].user_introduction_words_map:
@@ -216,8 +218,10 @@ def submit_introduction(key):
     game_data[key].add_introduction(Introduction(username, target_player, introduction))
 
     if len(game_data[key].introductions) == len(game_data[key].users):
+        print("Everyone has submitted an introduction")
         game_data[key].state = GameStates.guessing_the_friend
         game_data[key].user_introduction_words_map = {}
+        game_data[key].round += 1
     return jsonify("Success")
 
 
@@ -230,11 +234,12 @@ def get_round(key):
     return jsonify({"round": game_data[key].round})
 
 
-@app.route('/<key>/ready_players')
-def ready_players(key):
+@app.route('/<key>/submitted_introduction')
+def submitted_introduction(key):
     if not validate_key(key):
         return jsonify('Invalid key')
 
     global game_data
-    out = {introduction.username for introduction in game_data[key].introductions}
+    introductions = {introduction.username for introduction in game_data[key].introductions}
+    out = [(username, username in introductions) for username in game_data[key].users]
     return jsonify({"ready_players": list(out)})

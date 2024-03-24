@@ -63,4 +63,5 @@ class GameDatum:
         return [users_words[i] for i in sorted(random.sample(range(len(users_words)), min(30, len(users_words))))]
 
     def add_introduction(self, introduction: Introduction) -> None:
-        self.introductions.append(introduction)
+        if introduction.username not in {intro.username for intro in self.introductions}:
+            self.introductions.append(introduction)
