@@ -179,10 +179,7 @@ def sample_words(key):
         return jsonify('Invalid key')
 
     global game_data
-
-    # Sample words now
     username = request.get_json()["username"]
-
     if username in game_data[key].user_introduction_words_map:
         return game_data[key].user_introduction_words_map[username]
 
@@ -218,7 +215,6 @@ def submit_introduction(key):
     game_data[key].add_introduction(Introduction(username, target_player, introduction))
 
     if len(game_data[key].introductions) == len(game_data[key].users):
-        print("Everyone has submitted an introduction")
         game_data[key].state = GameStates.guessing_the_friend
         game_data[key].user_introduction_words_map = {}
         game_data[key].round += 1
@@ -243,3 +239,68 @@ def submitted_introduction(key):
     introductions = {introduction.username for introduction in game_data[key].introductions}
     out = [(username, username in introductions) for username in game_data[key].users]
     return jsonify({"ready_players": list(out)})
+
+
+@app.route('/<key>/all_introductions')
+def all_introductions(key):
+    if not validate_key(key):
+        return jsonify('Invalid key')
+
+    global game_data
+    username = request.get_json()["username"]
+
+    # We don't want to send users their own introduction
+    filtered_introductions = list(filter(lambda intro: intro.username != username, game_data[key].introductions[:]))
+    introductions = [intro.introduction for intro in filtered_introductions]
+    players = [intro.username for intro in filtered_introductions]
+    random.shuffle(introductions)
+    random.shuffle(players)
+
+    return jsonify({
+        "introductions": introductions,
+        "players": players
+    })
+
+
+@app.route('/<key>/submit_guess')
+def submit_guess(key):
+    if not validate_key(key):
+        return jsonify('Invalid key')
+
+    global game_data
+    username = request.get_json()["username"]
+    guesses = request.get_json()["guesses"]
+    game_data[key].guesses[username] = guesses
+
+    if len(game_data[key].guesses.keys()) == len(game_data[key].users):
+        # Score game
+        correctly_guessed_introductions = {user: 0 for user in game_data[key].users}
+
+        # Add points if you guess correctly
+        for _, (username, guesses) in enumerate(game_data[key].guesses.items()):
+            for target_user, prompt in guesses:
+                intro_true = filter(lambda intro: intro.target_user == target_user, game_data[key].introductions[:])
+                if next(intro_true).introduction == prompt:
+                    game_data[key].score[username] += 1
+                    correctly_guessed_introductions[intro_true.username] += 1
+
+        # Add points if your introduction was guessed correctly but not if by all
+        for _, (username, correct_guesses) in enumerate(correctly_guessed_introductions):
+            max_correct = len(game_data[key].users) - 1
+            if correct_guesses < max_correct:
+                game_data[key].score[username] += correct_guesses
+
+        # Prepare for next round
+        game_data[key].guesses = {}
+        game_data[key].round += 1
+
+    return jsonify("Success")
+
+
+@app.route('/<key>/get_scores')
+def get_scores(key):
+    if not validate_key(key):
+        return jsonify('Invalid key')
+
+    global game_data
+    return jsonify(game_data[key].scores)
