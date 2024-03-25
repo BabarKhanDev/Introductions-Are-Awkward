@@ -20,7 +20,6 @@ python3 -m pip install -r requirements.txt
 
 1. Running the app
 ```
-export FLASK_APP=app.py
 flask run
 ```
 
