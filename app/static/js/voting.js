@@ -1,3 +1,7 @@
+import {build_waiting_for_state} from "./waiting.js";
+import {build_introductions_page} from "./introductions.js";
+import {build_results_page} from "./results.js";
+
 export async function build_voting_page() {
     let main_section = document.getElementById("main")
     main_section.innerHTML = "Please drag the introduction to the matching player"
@@ -11,7 +15,6 @@ export async function build_voting_page() {
     })
 
     let introductions = await response.json()
-    // TODO this is showing the wrong names
 
     let voting_area = document.createElement("div")
     voting_area.id = "voting_area"
@@ -61,16 +64,36 @@ export async function build_voting_page() {
     let submit_button = document.createElement("button")
     submit_button.id = "voting_submit"
     submit_button.innerText = "Submit"
-    submit_button.addEventListener("click", () => {
+    submit_button.addEventListener("click", async () => {
 
         let names = document.getElementsByClassName("voting_name")
         let intros = document.getElementsByClassName("voting_intro")
 
+        let guess = {}
         for (let i = 0; i < names.length; i++) {
-            // TODO send this to flask
-            console.log(names[i].textContent, intros[i].textContent);
+            guess[names[i].textContent] = intros[i].textContent
         }
 
+        response = await fetch(`/${sessionStorage.getItem("game_key")}/submit_guess`, {
+            method: "POST",
+            cache: "no-cache",
+            headers: {"Content-Type": "application/json",},
+            referrerPolicy: "no-referrer",
+            body: JSON.stringify({
+                "username": sessionStorage.getItem("username"),
+                "guesses": guess
+            }),
+        })
+
+        response = await fetch(`/${sessionStorage.getItem("game_key")}/get_round`)
+        let round = await response.json()
+
+        await build_waiting_for_state(3 + round.round * 2, "Waiting for all users to submit their votes")
+        if (round.round != 3) {
+            await build_introductions_page()
+        } else {
+            await build_results_page()
+        }
 
     })
     voting_area.append(submit_button)

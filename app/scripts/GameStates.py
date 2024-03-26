@@ -7,3 +7,4 @@ class GameStates(Enum):
     making_introductions = 3
     guessing_the_friend = 4
     final_scores = 5
+

@@ -13,7 +13,7 @@ class GameDatum:
             users = []
         self.users = users
         self.state = state
-        self.score = {user: 0 for user in users}
+        self.scores = {user: 0 for user in users}
         self.timer = time.time()
 
         # Text harvesting stage
@@ -30,6 +30,7 @@ class GameDatum:
 
     def add_user(self, user: str) -> None:
         self.users += [user]
+        self.scores[user] = 0
 
     def set_timer(self, ms: int) -> None:
         self.timer = time.time() + ms / 1000

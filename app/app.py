@@ -244,15 +244,11 @@ def all_introductions(key):
 
     global game_data
     username = request.get_json()["username"]
-    print(username)
 
     # We don't want to send users their own introduction
     filtered_introductions = list(filter(lambda intro: intro.username != username, game_data[key].introductions[:]))
-    print(filtered_introductions)
     introductions = [intro.introduction for intro in filtered_introductions]
-    print(introductions)
     players = [intro.target_user for intro in filtered_introductions]
-    print(players)
 
     random.shuffle(introductions)
     random.shuffle(players)
@@ -263,7 +259,7 @@ def all_introductions(key):
     })
 
 
-@app.route('/<key>/submit_guess')
+@app.route('/<key>/submit_guess', methods=["POST"])
 def submit_guess(key):
     if not validate_key(key):
         return jsonify('Invalid key')
@@ -279,21 +275,32 @@ def submit_guess(key):
 
         # Add points if you guess correctly
         for _, (username, guesses) in enumerate(game_data[key].guesses.items()):
-            for target_user, prompt in guesses:
+            for _, (target_user, prompt) in enumerate(guesses.items()):
+
+                # Find the correct intro for the target user
                 intro_true = filter(lambda intro: intro.target_user == target_user, game_data[key].introductions[:])
-                if next(intro_true).introduction == prompt:
-                    game_data[key].score[username] += 1
+                intro_true = next(intro_true)
+
+                # If this is the correct intro then
+                # 1. Give the guesser a point
+                # 2. track that it was guessed correctly, this will allow us to give points to intro submitter
+                if intro_true.introduction == prompt:
+                    game_data[key].scores[username] += 1
                     correctly_guessed_introductions[intro_true.username] += 1
 
-        # Add points if your introduction was guessed correctly but not if by all
-        for _, (username, correct_guesses) in enumerate(correctly_guessed_introductions):
+        # Add points if your introduction was guessed correctly, but not if by all
+        for _, (username, correct_guesses) in enumerate(correctly_guessed_introductions.items()):
             max_correct = len(game_data[key].users) - 1
             if correct_guesses < max_correct:
-                game_data[key].score[username] += correct_guesses
+                game_data[key].scores[username] += correct_guesses
 
         # Prepare for next round
         game_data[key].guesses = {}
         game_data[key].round += 1
+
+        # TODO need to motify state to keep track of the multiple rounds
+        #   Either multiple states for each similar type or round or a list of states that we can pop off
+        # game_data[key].state += 1
 
     return jsonify("Success")
 
