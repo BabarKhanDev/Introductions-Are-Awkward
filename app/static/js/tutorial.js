@@ -13,9 +13,9 @@ export function tutorial_setup() {
 }
 
 document.addEventListener("keydown", (e) => {
-   if (e.key === "Escape") {
-       document.getElementById("tutorial_modal_blur").setAttribute("hidden", true)
-   }
+    if (e.key === "Escape") {
+        document.getElementById("tutorial_modal_blur").setAttribute("hidden", true)
+    }
 });
 
 function create_tutorial_modal() {
@@ -61,11 +61,12 @@ function create_tutorial_modal() {
     let slides = [
         create_slide(create_harvesting_display(), "First we will ask you to answer some questions about your fellow players.<br>Please be <b>very</b> descriptive!", 0),
         create_slide(create_introduction_display(), "Then we will ask you to describe one of the players, using only the words that other players used to describe them. <br> For every player who guesses correctly you get 1 point. <br> <b><i>Don't make it too easy though!</i></b><br>If everyone guesses correctly you get 0 points.", 1),
+        create_slide(create_voting_display(), "Guess which introduction applies to which person by dragging the intros around! <br> <i>note: dragging is broken in this tutorial menu</i>", 2),
     ]
 
     let slide_indicators = create_slide_indicators(slides.length)
 
-    slides.forEach(function(slide) {
+    slides.forEach(function (slide) {
         modal.append(slide)
     })
     modal.append(slide_indicators)
@@ -124,11 +125,11 @@ function create_slide_indicators(slides_count) {
     let out = document.createElement("div")
     out.id = "slide_indicators"
 
-    for (let i= 0; i < slides_count; i++) {
+    for (let i = 0; i < slides_count; i++) {
         let indicator = document.createElement("div")
         indicator.id = `slide_indicator_${i}`
         indicator.className = "slide_indicator"
-        indicator.addEventListener("click", function(){
+        indicator.addEventListener("click", function () {
             show_slide(this.id.slice(-1))
         })
         out.append(indicator)
@@ -206,6 +207,66 @@ function create_introduction_display() {
     let out = document.createElement("div")
     out.className = "tutorial_display_DOM"
     out.append(target_user_section, word_section, response_label, response_input, clear_response, prompt_submit)
+
+    return out
+}
+
+function create_voting_display() {
+
+    let voting_area = document.createElement("div")
+    voting_area.id = "voting_area"
+
+    let name_area = document.createElement("div")
+    name_area.id = "name_area"
+
+    let intro_area = document.createElement("div")
+    intro_area.id = "intro_area"
+
+    // This is adapted from https://stackoverflow.com/a/74336249
+    intro_area.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        const afterElement = getDragAfterElement(intro_area, e.clientX, e.clientY);
+        const draggable = document.querySelector(".dragging");
+        if (afterElement == null) {
+            intro_area.appendChild(draggable);
+        } else {
+            intro_area.insertBefore(draggable, afterElement);
+        }
+    });
+
+    voting_area.append(name_area, intro_area)
+
+    let players = ["Player1", "Player2"]
+    players.forEach((name) => {
+        let name_elem = document.createElement("p")
+        name_elem.className = "voting_name"
+        name_elem.textContent = name
+        name_area.append(name_elem)
+    })
+
+    let introductions = ["Wears lots of red", "Afraid heights"]
+    introductions.forEach((intro) => {
+        let intro_elem = document.createElement("p")
+        intro_elem.className = "voting_intro"
+        intro_elem.setAttribute("draggable", "true")
+        intro_elem.textContent = intro
+        intro_elem.addEventListener("dragstart", () => {
+            intro_elem.classList.add("dragging")
+        });
+        intro_elem.addEventListener("dragend", () => {
+            intro_elem.classList.remove("dragging")
+        });
+        intro_area.append(intro_elem)
+    })
+
+    let submit_button = document.createElement("button")
+    submit_button.id = "voting_submit"
+    submit_button.innerText = "Submit"
+    voting_area.append(submit_button)
+
+    let out = document.createElement("div")
+    out.className = "tutorial_display_DOM"
+    out.append(voting_area)
 
     return out
 }

@@ -15,18 +15,21 @@ class GameDatum:
         self.state = state
         self.scores = {user: 0 for user in users}
         self.timer = time.time()
+        self.round = 1
 
         # Text harvesting stage
         self.words = {}  # {user : [[str]]}
         self.word_list_min_len = 5
 
         # Introductions stage
-        self.round = 1
         self.introductions = []
         self.user_introduction_words_map = {}
 
         # Guess Stage
         self.guesses = {}
+
+        # Results
+        self.ready_for_next_round = set()
 
     def add_user(self, user: str) -> None:
         self.users += [user]

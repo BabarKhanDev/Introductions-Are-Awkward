@@ -6,5 +6,4 @@ class GameStates(Enum):
     text_harvesting = 2
     making_introductions = 3
     guessing_the_friend = 4
-    final_scores = 5
-
+    scores = 5
