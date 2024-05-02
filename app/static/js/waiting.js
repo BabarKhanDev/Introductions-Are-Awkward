@@ -34,12 +34,36 @@ export async function build_waiting_for_state(desired_state, waiting_text){
     }
 
     // Waiting for all users to submit their introductions
-    if (desired_state === 4 || desired_state === 6 || desired_state === 8) {
+    if (desired_state === 4) {
         let player_list = document.createElement("div")
         player_list.id = "player_list"
         main_section.append(player_list)
 
         let response = await fetch(`/${sessionStorage.getItem("game_key")}/submitted_introduction`)
+        let player_map = await response.json()
+        player_map = player_map.ready_players
+
+        player_map.forEach((item) => {
+            let username = item[0]
+            let ready = item[1]
+            let player_name_elem = document.createElement("p")
+            player_name_elem.innerHTML = username
+            player_name_elem.className = "player_name_waiting"
+            player_name_elem.id = `player_name_${username}`
+            if (ready) {
+                player_name_elem.className += " ready"
+            }
+            player_list.append(player_name_elem)
+        })
+    }
+
+    // Waiting for all users to submit their votes
+    if (desired_state === 5) {
+        let player_list = document.createElement("div")
+        player_list.id = "player_list"
+        main_section.append(player_list)
+
+        let response = await fetch(`/${sessionStorage.getItem("game_key")}/submitted_votes`)
         let player_map = await response.json()
         player_map = player_map.ready_players
 
@@ -83,7 +107,7 @@ export async function build_waiting_for_state(desired_state, waiting_text){
         }
 
         // Waiting for all users to submit their introductions
-        if (desired_state === 4 || desired_state === 6 || desired_state === 8) {
+        if (desired_state === 4) {
             let player_list_elem = document.getElementById("player_list")
             let response = await fetch(`/${sessionStorage.getItem("game_key")}/submitted_introduction`)
             let player_map = await response.json()
@@ -97,6 +121,22 @@ export async function build_waiting_for_state(desired_state, waiting_text){
                 }
             })
         }
+
+        if (desired_state === 5) {
+            let player_list_elem = document.getElementById("player_list")
+            let response = await fetch(`/${sessionStorage.getItem("game_key")}/submitted_votes`)
+            let player_map = await response.json()
+            player_map = player_map.ready_players
+
+            player_map.forEach((item) => {
+                let username = item[0]
+                let ready = item[1]
+                if (ready){
+                    document.getElementById(`player_name_${username}`).className = "player_name_waiting ready"
+                }
+            })
+        }
+
         await sleep(1000)
     }
 }

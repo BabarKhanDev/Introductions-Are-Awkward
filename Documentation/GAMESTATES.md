@@ -1,7 +1,9 @@
 # Game States
 
 I describe the state of my game using a finite state machine.
-That is as follows:
+We will travel through the states in the following order 1&rarr;2&rarr;3&rarr;4&rarr;5&rarr;3&rarr;4&rarr;5&rarr;3&rarr;4&rarr;5.
+
+## States:
 
 1. User login - Initial Game State
     Users are asked to input a username, when they select submit it is sent to the endpoint '/new_user' as a post request.
@@ -60,11 +62,5 @@ That is as follows:
    * You get one point for everybody who guesses your friend correctly, unless everyone guesses correctly, in which case you get 0.
    * You get 1 point if you used more than 3 peoples words in your answer.
 
-5. Making introductions, 2
-6. Guessing The Friend,  2
-
-7. Making introductions, 3
-8. Guessing The Friend,  3
-
-9. Final Scores
+5. Final Scores
     Once all prompts have been guessed we show scores

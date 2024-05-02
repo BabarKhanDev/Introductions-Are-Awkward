@@ -7,6 +7,7 @@ export async function build_introductions_page(){
     let main_section = document.getElementById("main")
     main_section.innerHTML = ""
     clearInterval(parseInt(sessionStorage.getItem("clock_interval")))
+    sessionStorage.removeItem("clock_interval")
 
     // Get a prompt
     let response = await fetch(`/${sessionStorage.getItem("game_key")}/sample_words`, {
@@ -89,6 +90,6 @@ async function submit_introduction_response() {
 
     })
 
-    await build_waiting_for_state(2 + 2 *round.round, "Waiting for all users to submit their prompts")
+    await build_waiting_for_state(4, "Waiting for all users to submit their prompts")
     await build_voting_page()
 }

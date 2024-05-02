@@ -7,43 +7,47 @@
     --green: #537A5A;
     --black: #251605;
     --background: #f2fcf2;
+
+    --gold: #d4af37;
+    --silver: #c0c0c0;
+    --bronze: #cd7f32;
 }
 
-body{
+body {
     font-family: 'Roboto', sans-serif;
     font-weight: 400;
     font-style: normal;
-    display:flex;
+    display: flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    margin:0;
-    padding:0;
+    margin: 0;
+    padding: 0;
     background-color: var(--background);
 }
 
-#header{
+#header {
     background-color: var(--mint);
     display: flex;
     justify-content: center;
     align-items: center;
-    width:100%;
+    width: 100%;
 }
 
-#title{
+#title {
     font-family: "Madimi One", sans-serif;
     font-weight: 400;
     font-style: normal;
     color: black;
     text-align: center;
-    margin:0.3em 0 0.3em 0;
+    margin: 0.3em 0 0.3em 0;
 }
 
 button {
     font-family: "Madimi One", sans-serif;
     font-weight: 400;
     font-style: normal;
-    font-size:1.4em;
+    font-size: 1.4em;
 
     background-color: var(--button);
 
@@ -57,55 +61,56 @@ button:hover {
     cursor: pointer;
 }
 
-#main{
-    display:flex;
+#main {
+    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width:50%;
-    height:90vh;
-    font-size:1.2em;
-    position:relative;
+    width: 50%;
+    height: 90vh;
+    font-size: 1.2em;
+    position: relative;
 }
 
-#main>*{
+#main > *:not(.confetti) {
     padding-bottom: 0.1em;
     margin-bottom: 0.5em;
     width: 100%;
 }
 
-#main>label{
-    padding-bottom:0;
-    margin-bottom:0;
+#main > label {
+    padding-bottom: 0;
+    margin-bottom: 0;
     font-family: "Madimi One", sans-serif;
     font-weight: 400;
     font-style: normal;
-    font-size:1.4em;
+    font-size: 1.4em;
 }
-#main>p{
+
+#main > p {
     text-align: center;
 }
 
 @media only screen and (max-width: 768px) {
     /* For mobile phones: */
-    #main{
-        width:70%;
+    #main {
+        width: 70%;
     }
 }
 
 @media only screen and (min-width: 2000px) {
     /* For ultra-wide monitors: */
-    #main{
-        width:600px;
+    #main {
+        width: 600px;
     }
 }
 
 #username_input, #key_input, #response_input {
     background-color: var(--button_light);
-    border:0;
+    border: 0;
     border-radius: 4px;
-    font-size:1.2em;
-    padding:0.3em;
+    font-size: 1.2em;
+    padding: 0.3em;
 }
 
 #username_submit {
@@ -120,7 +125,7 @@ button:hover {
     text-align: center;
     margin-bottom: 1em;
     font-weight: bold;
-    font-size:1.4em;
+    font-size: 1.4em;
     border-radius: 4px;
 }
 
@@ -135,14 +140,14 @@ button:hover {
     background-color: var(--mint);
 }
 
-#clock{
+#clock {
     position: absolute;
     top: 10px;
     border-radius: 4px;
-    width:3em;
-    height:3em;
-    text-align:center;
-    display:flex;
+    width: 3em;
+    height: 3em;
+    text-align: center;
+    display: flex;
     align-items: center;
     justify-content: center;
     background-color: var(--button_light);
@@ -161,20 +166,20 @@ button:hover {
 }
 
 #response_div, #word_section {
-    display:flex;
-    flex-wrap:wrap;
+    display: flex;
+    flex-wrap: wrap;
     flex-direction: row;
 }
 
 #response_div > p, #word_section > p {
-    font-size:1.1em;
+    font-size: 1.1em;
     margin: 0;
 }
 
 #word_section > p {
     background-color: var(--button_light);
-    margin:0.3em;
-    padding:0.2em;
+    margin: 0.3em;
+    padding: 0.2em;
 }
 
 #word_section > p:hover {
@@ -183,14 +188,20 @@ button:hover {
 
 /* Voting */
 #voting_area {
-    width:100%;
-    display:flex;
+    width: 100%;
+    display: flex;
     flex-direction: row;
 }
 
+#voting_area > button {
+    align-self: end;
+    justify-self: center;
+
+}
+
 #name_area, #intro_area {
-    width:50%;
-    display:flex;
+    width: 50%;
+    display: flex;
     flex-direction: column;
     align-items: center;
     -webkit-touch-callout: none;
@@ -202,7 +213,7 @@ button:hover {
 }
 
 .voting_name, .voting_intro {
-    width:70%;
+    width: 70%;
     background-color: var(--button_light);
     text-align: center;
     padding: 0.3em 0 0.3em 0;
@@ -214,6 +225,69 @@ button:hover {
     cursor: move;
 }
 
-.dragging{
+.dragging {
     opacity: .5;
+}
+
+/* Results Page */
+.results_elem {
+    display: flex;
+    align-items: center;
+    max-width: 400px;
+    animation: slideIn 0.5s ease forwards;
+}
+
+.results_name_elem {
+    background-color: var(--button_light);
+    text-align: center;
+    border-radius: 4px 0 0 4px;
+    flex-grow: 1;
+    padding: 0.3em 0 0.3em 0;
+}
+
+.results_score_elem {
+    border-radius: 0px 4px 4px 0px;
+    width: 1.5em;
+    background-color: var(--accent);
+    text-align: center;
+    padding: 0.3em 0 0.3em 0;
+}
+
+.gold {
+    background-color: var(--gold);
+}
+
+.silver {
+    background-color: var(--silver);
+}
+
+.bronze {
+    background-color: var(--bronze);
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.confetti{
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    animation: confetti-fall 5s linear;
+}
+
+@keyframes confetti-fall {
+    0% {
+        transform: translateY(-100vh) rotate(0deg);
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg);
+    }
 }

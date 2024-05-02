@@ -204,8 +204,7 @@ def submit_introduction(key):
 
     if len(game_data[key].introductions) == len(game_data[key].users):
         game_data[key].state = GameStates.guessing_the_friend
-        game_data[key].user_introduction_words_map = {}
-        game_data[key].round += 1
+
     return jsonify("Success")
 
 
@@ -224,9 +223,51 @@ def submitted_introduction(key):
         return jsonify('Invalid key')
 
     global game_data
-    introductions = {introduction.username for introduction in game_data[key].introductions}
-    out = [(username, username in introductions) for username in game_data[key].users]
-    return jsonify({"ready_players": list(out)})
+
+    # Has the user submitted as many introductions as there have been rounds
+    # i.e. have they submitted one for the most recent round
+    introductions = [introduction.username for introduction in game_data[key].introductions]
+    out = []
+    for username in game_data[key].users:
+        out.append((username, len(list(filter(lambda user: user == username, introductions))) >= game_data[key].round))
+
+    return jsonify({"ready_players": out})
+
+
+@app.route('/<key>/submitted_votes')
+def submitted_votes(key):
+    if not validate_key(key):
+        return jsonify('Invalid key')
+
+    global game_data
+    guessed = game_data[key].guesses.keys()
+    out = [(username, username in guessed) for username in game_data[key].users]
+    return jsonify({"ready_players": out})
+
+
+@app.route('/<key>/ready_for_next_round', methods=["POST"])
+def ready_for_next_round(key):
+    if not validate_key(key):
+        return jsonify('Invalid key')
+
+    username = request.get_json()["username"]
+    global game_data
+    game_data[key].ready_for_next_round.add(username)
+
+    if len(game_data[key].ready_for_next_round) == len(game_data[key].users):
+
+        # Reset all variables besides core and introductions
+        game_data[key].state = GameStates.text_harvesting
+        game_data[key].set_timer(61000)
+        game_data[key].introductions = []
+        game_data[key].user_introduction_words_map = {}
+        game_data[key].guesses = {}
+        game_data[key].ready_for_next_round = set()
+
+        # For testing enable this
+        game_data[key].set_timer(2000)
+
+    return jsonify("Success")
 
 
 @app.route('/<key>/all_introductions', methods=["POST"])
@@ -289,10 +330,7 @@ def submit_guess(key):
         # Prepare for next round
         game_data[key].guesses = {}
         game_data[key].round += 1
-
-        # TODO need to motify state to keep track of the multiple rounds
-        #   Either multiple states for each similar type or round or a list of states that we can pop off
-        # game_data[key].state += 1
+        game_data[key].state = GameStates.scores
 
     return jsonify("Success")
 
@@ -303,4 +341,8 @@ def get_scores(key):
         return jsonify('Invalid key')
 
     global game_data
-    return jsonify(game_data[key].scores)
+    return jsonify({
+        "scores": game_data[key].scores,
+        "round": game_data[key].round
+    })
+
