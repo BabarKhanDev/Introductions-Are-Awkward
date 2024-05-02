@@ -1,9 +1,7 @@
-# These will handle the requests from the web ui
-import random
-import string
-
 from flask import Flask, request, render_template, jsonify, send_from_directory
 from flask_cors import CORS
+import random
+import string
 
 from app.scripts.GameDatum import GameDatum
 from app.scripts.GameStates import GameStates
@@ -48,10 +46,9 @@ def all_keys():
 
 @app.route("/<key>/new_user", methods=["POST"])
 def new_user(key):
-    
     if not validate_key(key):
         return jsonify("Invalid Key")
-    
+
     global game_data
     data = request.get_json()
     username = data["username"]
@@ -96,7 +93,6 @@ def all_ready(key):
 
 @app.route('/<key>/timer_remaining')
 def timer_remaining(key):
-
     if not validate_key(key):
         return jsonify("Invalid key")
 
@@ -129,7 +125,6 @@ def kick_player(key):
 
 @app.route('/<key>/get_prompt', methods=["POST"])
 def get_prompt(key):
-
     if not validate_key(key):
         return jsonify("Invalid key")
 
@@ -147,7 +142,6 @@ def get_prompt(key):
 
 @app.route('/<key>/submit_prompt_answer', methods=["POST"])
 def submit_prompt_answer(key):
-
     if not validate_key(key):
         return jsonify("Invalid key")
 
@@ -162,7 +156,6 @@ def submit_prompt_answer(key):
 
 @app.route('/<key>/sample_words', methods=["POST"])
 def sample_words(key):
-
     if not validate_key(key):
         return jsonify('Invalid key')
 
@@ -191,7 +184,6 @@ def sample_words(key):
 
 @app.route('/<key>/submit_introduction', methods=["POST"])
 def submit_introduction(key):
-
     if not validate_key(key):
         return jsonify('Invalid key')
 
@@ -255,7 +247,6 @@ def ready_for_next_round(key):
     game_data[key].ready_for_next_round.add(username)
 
     if len(game_data[key].ready_for_next_round) == len(game_data[key].users):
-
         # Reset all variables besides core and introductions
         game_data[key].state = GameStates.text_harvesting
         game_data[key].set_timer(61000)
@@ -345,4 +336,3 @@ def get_scores(key):
         "scores": game_data[key].scores,
         "round": game_data[key].round
     })
-
