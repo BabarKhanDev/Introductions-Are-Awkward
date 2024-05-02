@@ -1,7 +1,7 @@
 import {sleep} from "./util.js"
 import {build_harvesting_page} from "./harvesting.js";
 
-export async function build_waiting_for_state(desired_state, waiting_text){
+export async function build_waiting_for_state(desired_state, waiting_text) {
 
     let main_section = document.getElementById("main")
     main_section.innerHTML = ""
@@ -81,22 +81,22 @@ export async function build_waiting_for_state(desired_state, waiting_text){
         })
     }
 
-    while (true){
+    while (true) {
         let response = await fetch(`/${sessionStorage.getItem("game_key")}/get_state`)
         let current_state = await response.json()
 
-        if (current_state === desired_state){
+        if (current_state === desired_state) {
             return
         }
 
         // Waiting for all users to join the game
-        if (desired_state === 2){
+        if (desired_state === 2) {
             // Show the logged in players
             let response = await fetch(`/${sessionStorage.getItem("game_key")}/all_players`)
             let players = await response.json()
 
             let player_list_elem = document.getElementById("player_list")
-            if (players.players.length !== player_list_elem.children.length){
+            if (players.players.length !== player_list_elem.children.length) {
                 player_list_elem.innerHTML = ""
                 players.players.forEach((player_name) => {
                     let player_name_elem = document.createElement("p")
@@ -116,7 +116,7 @@ export async function build_waiting_for_state(desired_state, waiting_text){
             player_map.forEach((item) => {
                 let username = item[0]
                 let ready = item[1]
-                if (ready){
+                if (ready) {
                     document.getElementById(`player_name_${username}`).className = "player_name_waiting ready"
                 }
             })
@@ -131,7 +131,7 @@ export async function build_waiting_for_state(desired_state, waiting_text){
             player_map.forEach((item) => {
                 let username = item[0]
                 let ready = item[1]
-                if (ready){
+                if (ready) {
                     document.getElementById(`player_name_${username}`).className = "player_name_waiting ready"
                 }
             })
@@ -141,13 +141,12 @@ export async function build_waiting_for_state(desired_state, waiting_text){
     }
 }
 
-async function submit_ready(){
+async function submit_ready() {
     let response = await fetch(`/${sessionStorage.getItem("game_key")}/all_ready`)
     let response_msg = await response.json()
-    if (response_msg === "success"){
+    if (response_msg === "success") {
         await build_harvesting_page()
-    }
-    else{
+    } else {
         alert("Something went wrong, try again :(")
     }
 }

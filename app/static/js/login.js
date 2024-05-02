@@ -53,7 +53,7 @@ export async function join_game() {
         },
         referrerPolicy: "no-referrer",
         body: JSON.stringify({
-                "username":document.getElementById("username_input").value
+                "username": document.getElementById("username_input").value
             }
         ),
     })
@@ -65,8 +65,7 @@ export async function join_game() {
         document.getElementById("tutorial_modal").remove()
         document.getElementById("tutorial_modal_blur").remove()
         await build_waiting_for_state(2, "Waiting For All Players To Join")
-    }
-    else if (response_msg === "Success") {
+    } else if (response_msg === "Success") {
         sessionStorage.setItem("username", username)
         sessionStorage.setItem("initialUser", "false")
         document.getElementById("tutorial_modal").remove()
