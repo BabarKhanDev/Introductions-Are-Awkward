@@ -62,16 +62,15 @@ h1 {
 
 .slide {
     align-self:center;
+    font-size:1.2em;
+    position:relative;
+    padding:1em;
 
     display:flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 
-    font-size:1.2em;
-    position:relative;
-
-    padding:1em;
 }
 
 .tutorial_display_DOM {
@@ -83,9 +82,7 @@ h1 {
     border: solid 1px black;
     border-radius:4px;
     padding:1em;
-
-    width:50%;
-    aspect-ratio: 1/1;
+    width: 600px;
 }
 
 @media only screen and (max-width: 900px) {
@@ -97,13 +94,6 @@ h1 {
         left:50%;
         transform: translate(-50%, -50%);
 
-    }
-}
-
-@media only screen and (min-width: 2000px) {
-    /* For ultra-wide monitors: */
-    .tutorial_display_DOM{
-        width:600px;
     }
 }
 
