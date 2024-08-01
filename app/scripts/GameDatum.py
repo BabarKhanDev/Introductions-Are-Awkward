@@ -47,7 +47,7 @@ class GameDatum:
     def sample_words(self, user: str) -> [str]:
 
         if user not in self.words:
-            self.words[user] = [f"Nobody wrote anything about {user}, how sad :("]
+            return f"Nobody wrote anything about {user}, how sad :(".split(" ")
 
         # Prepare data
         users_words = self.words[user][:]
