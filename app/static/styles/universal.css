@@ -1,9 +1,12 @@
 :root {
     --blue: #577399;
+    --button: #b7cbe6;
+    --button_light: #d9e1ec;
     --accent: #ffdbbf;
     --mint: #B3EFB2;
     --green: #537A5A;
     --black: #251605;
+    --background: #f2fcf2;
 }
 
 body{
@@ -16,6 +19,7 @@ body{
     align-items: center;
     margin:0;
     padding:0;
+    background-color: var(--background);
 }
 
 #header{
@@ -41,9 +45,16 @@ button {
     font-style: normal;
     font-size:1.4em;
 
+    background-color: var(--button);
+
     border: 0;
     max-width: 10em;
     border-radius: 4px;
+}
+
+button:hover {
+    background-color: var(--blue);
+    cursor: pointer;
 }
 
 #main{
@@ -54,6 +65,21 @@ button {
     width:30%;
     height:90vh;
     font-size:1.2em;
+    position:relative;
+}
+
+@media only screen and (max-width: 768px) {
+    /* For mobile phones: */
+    #main{
+        width:70%;
+    }
+}
+
+@media only screen and (min-width: 2000px) {
+    /* For ultra-wide monitors: */
+    #main{
+        width:600px;
+    }
 }
 
 #main>*{
@@ -71,12 +97,16 @@ button {
     font-size:1.4em;
 }
 
-#username_input, #key_input {
-    background-color: ButtonFace;
+#username_input, #key_input, #response_input {
+    background-color: var(--button_light);
     border:0;
     border-radius: 4px;
     font-size:1.2em;
     padding:0.3em;
+}
+
+#username_submit {
+    margin-top: 0.4em;
 }
 
 #main>p{
@@ -87,15 +117,16 @@ button {
     background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
     background-size: 400% 400%;
     animation: gradient 15s ease infinite;
-    padding: 1em;
+    padding: 1em 0.3em 1em 0.3em;
     text-align: center;
     margin-bottom: 1em;
     font-weight: bold;
     font-size:1.4em;
+    border-radius: 4px;
 }
 
 #player_list > p {
-    background-color: ButtonFace;
+    background-color: var(--button_light);
     text-align: center;
     padding: 0.3em 0 0.3em 0;
     border-radius: 4px;
@@ -104,11 +135,14 @@ button {
 #clock{
     position: absolute;
     top: 10px;
-    border: solid 1px black;
-    border-radius: 100em;
-    width:2em;
-    height:2em;
+    border-radius: 4px;
+    width:3em;
+    height:3em;
     text-align:center;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--button_light);
 }
 
 @keyframes gradient {
@@ -129,22 +163,17 @@ button {
     flex-direction: row;
 }
 
-#response_div > p {
+#response_div > p, #word_section > p {
+    font-size:1.1em;
     margin: 0;
-    background-color: white;
-    font-size:small;
 }
 
 #word_section > p {
+    background-color: var(--button_light);
     margin:0.3em;
-    background-color: white;
     padding:0.2em;
-    font-size: small;
 }
 
 #word_section > p:hover {
-    margin: 0.3em;
-    background-color: #afafaf;
-    padding:0.2em;
-    font-size: small;
+    background-color: var(--blue);
 }
