@@ -5,10 +5,10 @@ import string
 from flask import Flask, request, render_template, jsonify
 from flask_cors import CORS
 
-from scripts.User import User
-from scripts.GameDatum import GameDatum
-from scripts.GameStates import GameStates
-from scripts.PromptGenerator import PromptGenerator
+from app.scripts.User import User
+from app.scripts.GameDatum import GameDatum
+from app.scripts.GameStates import GameStates
+from app.scripts.PromptGenerator import PromptGenerator
 
 app = Flask(__name__)
 CORS(app)
