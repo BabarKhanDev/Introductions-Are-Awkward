@@ -18,7 +18,6 @@ export async function build_results_page() {
         main_section.append(title)
 
         await build_results(scores, true)
-        console.log("done")
         return
     }
 

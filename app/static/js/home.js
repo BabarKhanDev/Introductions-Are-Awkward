@@ -55,5 +55,4 @@ async function main() {
         sessionStorage.setItem("waiting", "false")
         await build_landing()
     }
-    console.log("Loaded JS")
 }
