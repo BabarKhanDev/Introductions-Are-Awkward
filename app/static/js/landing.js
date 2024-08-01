@@ -1,4 +1,5 @@
 import {build_login, join_game} from "./login.js"
+import {tutorial_setup} from "./tutorial.js";
 
 export async function build_landing() {
 
@@ -12,9 +13,15 @@ export async function build_landing() {
     new_game_button.innerHTML = "New Game"
     new_game_button.addEventListener("click", () => build_new_game())
 
+    let tutorial_button = document.createElement("button")
+    tutorial_button.id = "tutorial_button"
+    tutorial_button.textContent = "Tutorial"
+
     let main_section = document.getElementById("main")
     main_section.innerHTML = ""
-    main_section.append(join_button, new_game_button)
+    main_section.append(join_button, new_game_button, tutorial_button)
+
+    tutorial_setup()
 
 }
 

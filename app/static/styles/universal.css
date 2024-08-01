@@ -2,7 +2,7 @@
     --blue: #577399;
     --button: #b7cbe6;
     --button_light: #d9e1ec;
-    --accent: #ffdbbf;
+    --accent: #b38f9c;
     --mint: #B3EFB2;
     --green: #537A5A;
     --black: #251605;
@@ -68,20 +68,6 @@ button:hover {
     position:relative;
 }
 
-@media only screen and (max-width: 768px) {
-    /* For mobile phones: */
-    #main{
-        width:70%;
-    }
-}
-
-@media only screen and (min-width: 2000px) {
-    /* For ultra-wide monitors: */
-    #main{
-        width:600px;
-    }
-}
-
 #main>*{
     padding-bottom: 0.1em;
     margin-bottom: 0.5em;
@@ -96,6 +82,23 @@ button:hover {
     font-style: normal;
     font-size:1.4em;
 }
+#main>p{
+    text-align: center;
+}
+
+@media only screen and (max-width: 768px) {
+    /* For mobile phones: */
+    #main{
+        width:70%;
+    }
+}
+
+@media only screen and (min-width: 2000px) {
+    /* For ultra-wide monitors: */
+    #main{
+        width:600px;
+    }
+}
 
 #username_input, #key_input, #response_input {
     background-color: var(--button_light);
@@ -109,9 +112,7 @@ button:hover {
     margin-top: 0.4em;
 }
 
-#main>p{
-    text-align: center;
-}
+
 
 #game_key_display {
     background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
