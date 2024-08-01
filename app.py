@@ -69,10 +69,10 @@ def new_user(key):
     data = request.get_json()
     username = data["username"]
 
-    if username in game_data[key].users:
+    if username.lower() in [user.lower() for user in game_data[key].users]:
         return jsonify("Username Taken")
 
-    game_data[key].users.append(User(username))
+    game_data[key].users = game_data[key].users + [User(username)]
     if len(game_data[key].users) == 1:
         return jsonify("Initial User")
 
@@ -90,12 +90,26 @@ def get_state(key):
 
 @app.route('/<key>/all_ready')
 def all_ready(key):
+    # This is called when all players have connected, and we can start the game
+    # We start a timer for the text harvesting stage, this is so that if anyone refreshes the page they
+    # can get an updated time remaining
     if not validate_key(key):
         return jsonify("Invalid key")
 
     global game_data
     game_data[key].state = GameStates.text_harvesting
+    game_data[key].set_timer(61000)
     return jsonify("success")
+
+
+@app.route('/<key>/timer_remaining')
+def timer_remaining(key):
+
+    if not validate_key(key):
+        return jsonify("Invalid key")
+
+    global game_data
+    return jsonify(game_data[key].timer_remaining())
 
 
 @app.route('/<key>/all_players')
@@ -128,8 +142,8 @@ def get_prompt(key):
     print(username)
 
     prompt = prompt_generator.prepare_prompt().split()
-    names = game_data[key].users
-    print(names)
-    names.remove(User(username))
+    names = [user.username for user in game_data[key].users]
+    names.remove(username)
     print(names)
     return jsonify(" ".join(word.replace("$name", random.choice(names)) for word in prompt))
+

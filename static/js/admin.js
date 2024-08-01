@@ -1,4 +1,10 @@
 async function main(){
+
+    //Get game code
+    let window_array = window.location.href.split("/")
+    let game_code = window_array[window_array.length - 2]
+    sessionStorage.setItem("game_code", game_code)
+
     await render_player_list()
 }
 
@@ -43,7 +49,9 @@ async function render_player_list(){
         }
     }
 
-    let response = await fetch("/all_players")
+
+
+    let response = await fetch(`/${sessionStorage.getItem("game_code")}/all_players`)
     let response_msg = await response.json()
     document.getElementById("players").innerHTML = "<p>Players:<\p>"
     response_msg.players.forEach((player) => {

@@ -47,6 +47,16 @@ body{
     font-weight: bold;
 }
 
+#clock{
+    position: absolute;
+    top: 10px;
+    border: solid 1px black;
+    border-radius: 100em;
+    width:2em;
+    height:2em;
+    text-align:center;
+}
+
 @keyframes gradient {
     0% {
         background-position: 0% 50%;
