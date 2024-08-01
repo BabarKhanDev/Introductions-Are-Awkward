@@ -1,4 +1,5 @@
 from app.scripts.GameStates import GameStates
+from app.scripts.Introduction import Introduction
 
 import time
 import math
@@ -14,17 +15,17 @@ class GameDatum:
         self.state = state
         self.timer = time.time()
 
+        # Text harvesting stage
         self.words = {}  # {user : [[str]]}
         self.word_list_min_len = 5
 
+        # Introductions stage
         self.round = 1
+        self.introductions = []
+        self.user_introduction_words_map = {}
 
     def add_user(self, user: str) -> None:
-        self.users.append(user)
-
-    def add_users(self, users: [str]) -> None:
-        for user in users:
-            self.add_user(user)
+        self.users += [user]
 
     def set_timer(self, ms: int) -> None:
         self.timer = time.time() + ms / 1000
@@ -44,19 +45,22 @@ class GameDatum:
         self.words[user].append(words)
 
     def sample_words(self, user: str) -> [str]:
-        # We want to get words that have been written about user
+
+        if user not in self.words:
+            self.words[user] = [f"Nobody wrote anything about {user}, how sad :("]
+
+        # Prepare data
         users_words = self.words[user][:]
+        users_words = list(filter(lambda x: x != '', users_words))
+        users_words = [word.split(" ") for word in users_words]
+        users_words = [word for sentence in users_words for word in sentence]
         random.shuffle(users_words)
-        out = []
 
-        for words in users_words:
-            if len(out) > 50:
-                return out
-            if len(words) <= self.word_list_min_len:
-                out.append(words)
-            else:
-                start_idx = random.randint(0, len(words) - self.word_list_min_len)
-                end_idx = random.randint(start_idx+1, len(words))
-                out.append(words[start_idx:end_idx])
+        if len(users_words) < self.word_list_min_len:
+            users_words += "Not much else is known about them".split(" ")
+            return users_words
 
-        return out
+        return [users_words[i] for i in sorted(random.sample(range(len(users_words)), min(30, len(users_words))))]
+
+    def add_introduction(self, introduction: Introduction) -> None:
+        self.introductions.append(introduction)

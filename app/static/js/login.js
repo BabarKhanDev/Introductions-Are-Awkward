@@ -1,6 +1,6 @@
 import {build_landing} from './landing.js';
-import {build_harvesting_page} from "./harvesting";
-import {build_waiting_for_state} from "./waiting";
+import {build_harvesting_page} from "./harvesting.js";
+import {build_waiting_for_state} from "./waiting.js";
 
 export async function build_login() {
 
@@ -18,6 +18,7 @@ export async function build_login() {
     let key_input = document.createElement("input")
     key_input.maxLength = 4
     key_input.id = "key_input"
+    key_input.placeholder = "Enter 4 Digit Game Key"
 
     let username_submit = document.createElement("button")
     username_submit.innerHTML = "Join"
