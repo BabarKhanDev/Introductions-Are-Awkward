@@ -13,10 +13,6 @@ from app.scripts.Introduction import Introduction
 app = Flask(__name__)
 CORS(app)
 prompt_generator = PromptGenerator()
-"""
-Game data will store a list of users and a game state
-It will be of the form: string -> GameData
-"""
 game_data = {}
 
 
@@ -101,7 +97,7 @@ def all_ready(key):
     game_data[key].set_timer(61000)
 
     # For testing enable this
-    game_data[key].set_timer(10000)
+    game_data[key].set_timer(2000)
 
     return jsonify("success")
 
@@ -241,18 +237,23 @@ def submitted_introduction(key):
     return jsonify({"ready_players": list(out)})
 
 
-@app.route('/<key>/all_introductions')
+@app.route('/<key>/all_introductions', methods=["POST"])
 def all_introductions(key):
     if not validate_key(key):
         return jsonify('Invalid key')
 
     global game_data
     username = request.get_json()["username"]
+    print(username)
 
     # We don't want to send users their own introduction
     filtered_introductions = list(filter(lambda intro: intro.username != username, game_data[key].introductions[:]))
+    print(filtered_introductions)
     introductions = [intro.introduction for intro in filtered_introductions]
-    players = [intro.username for intro in filtered_introductions]
+    print(introductions)
+    players = [intro.target_user for intro in filtered_introductions]
+    print(players)
+
     random.shuffle(introductions)
     random.shuffle(players)
 
