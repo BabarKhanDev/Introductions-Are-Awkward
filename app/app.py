@@ -29,14 +29,6 @@ def home_page():
     return render_template("home.html")
 
 
-@app.route('/<key>/admin')
-def admin_page(key):
-    global game_data
-    if key not in game_data.keys():
-        return jsonify("Invalid key")
-    return render_template("admin.html")
-
-
 # Json handling
 @app.route("/generate_key")
 def generate_key():
