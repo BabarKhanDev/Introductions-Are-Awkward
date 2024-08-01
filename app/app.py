@@ -2,7 +2,7 @@
 import random
 import string
 
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, render_template, jsonify, send_from_directory
 from flask_cors import CORS
 
 from app.scripts.User import User
@@ -18,7 +18,6 @@ Game data will store a list of users and a game state
 It will be of the form: string -> GameData
 """
 game_data = {}
-
 
 
 def validate_key(key: string) -> bool:
@@ -109,7 +108,11 @@ def timer_remaining(key):
         return jsonify("Invalid key")
 
     global game_data
-    return jsonify(game_data[key].timer_remaining())
+    time_remaining = game_data[key].timer_remaining()
+    if not time_remaining > 0:
+        game_data[key].state = GameStates.making_introductions
+
+    return jsonify(time_remaining)
 
 
 @app.route('/<key>/all_players')
@@ -138,12 +141,50 @@ def get_prompt(key):
         return jsonify("Invalid key")
 
     username = request.get_json()["username"]
-
-    print(username)
-
     prompt = prompt_generator.prepare_prompt().split()
     names = [user.username for user in game_data[key].users]
     names.remove(username)
-    print(names)
-    return jsonify(" ".join(word.replace("$name", random.choice(names)) for word in prompt))
+    target_user = random.choice(names)
+    return jsonify({
+        "target_user": target_user,
+        "prompt": " ".join(word.replace("$name", target_user) for word in prompt)
+    })
+
+
+@app.route('/<key>/submit_prompt_answer', methods=["POST"])
+def submit_prompt_answer(key):
+
+    if not validate_key(key):
+        return jsonify("Invalid key")
+
+    response = request.get_json()["answer"]
+    target_user = request.get_json()["target_user"]
+
+    print(target_user, response)
+
+    global game_data
+    game_data[key].add_words(target_user, response)
+
+    return jsonify("Success")
+
+
+@app.route('/<key>/sample_words', methods=["POST"])
+def sample_words(key):
+
+    if not validate_key(key):
+        return jsonify('Invalid key')
+
+    # This is the players username
+    username = request.get_json()["username"]
+
+    global game_data
+    users = game_data[key].users
+    username_index = users.index(username)
+    target_user = users[username_index + game_data[key].round]
+
+    words = game_data[key].sample_words(target_user)
+    return jsonify({
+        "target_user": target_user,
+        "words": words
+    })
 
