@@ -6,6 +6,7 @@ export function tutorial_setup() {
 
     document.getElementById("tutorial_button").addEventListener("click", () => {
         document.getElementById("tutorial_modal_blur").removeAttribute("hidden");
+        document.getElementById("tutorial_modal").style.display = "flex"
         document.getElementById("tutorial_modal").showModal()
         show_slide(0)
     })
@@ -22,6 +23,7 @@ function create_tutorial_modal() {
 
     let modal = document.createElement("dialog")
     modal.id = "tutorial_modal"
+    modal.style.display = "none"
 
     let modal_back = document.createElement("button")
     modal_back.textContent = "Back"
@@ -45,6 +47,7 @@ function create_tutorial_modal() {
     modal_close.id = "tutorial_close"
     modal_close.addEventListener("click", () => {
         document.getElementById("tutorial_modal").close()
+        document.getElementById("tutorial_modal").style.display = "none"
         document.getElementById("tutorial_modal_blur").setAttribute("hidden", true)
     })
 
