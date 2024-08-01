@@ -58,18 +58,19 @@ export async function join_game() {
         ),
     })
 
-    document.getElementById("tutorial_modal").remove()
-    document.getElementById("tutorial_modal_blur").remove()
-
     let response_msg = await response.json()
     if (response_msg === "Initial User") {
         sessionStorage.setItem("username", username)
         sessionStorage.setItem("initialUser", "true")
+        document.getElementById("tutorial_modal").remove()
+        document.getElementById("tutorial_modal_blur").remove()
         await build_waiting_for_state(2, "Waiting For All Players To Join")
     }
     else if (response_msg === "Success") {
         sessionStorage.setItem("username", username)
         sessionStorage.setItem("initialUser", "false")
+        document.getElementById("tutorial_modal").remove()
+        document.getElementById("tutorial_modal_blur").remove()
         await build_waiting_for_state(2, "Waiting For All Players To Join")
         await build_harvesting_page()
     } else if (response_msg === "Username Taken") {

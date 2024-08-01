@@ -89,6 +89,6 @@ async function submit_introduction_response() {
 
     })
 
-    await build_waiting_for_state(3 + round.round, "Waiting for all users to submit their prompts")
+    await build_waiting_for_state(2 + 2 *round.round, "Waiting for all users to submit their prompts")
     await build_voting_page()
 }
