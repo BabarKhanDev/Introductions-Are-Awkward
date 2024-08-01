@@ -1,5 +1,4 @@
 import {build_waiting_for_state} from "./waiting.js";
-import {build_introductions_page} from "./introductions.js";
 import {build_results_page} from "./results.js";
 
 export async function build_voting_page() {

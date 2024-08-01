@@ -6,16 +6,18 @@ import {build_introductions_page} from "./introductions.js";
 import {build_voting_page} from "./voting.js";
 import {build_results_page} from "./results.js";
 
-window.onload = async function() {await main();};
+window.onload = async function () {
+    await main();
+};
 
 async function main() {
 
     if (sessionStorage.getItem("username") != null) {
-    // User has already logged in and is in the middle of the game
+        // User has already logged in and is in the middle of the game
 
         let response = await fetch(`/${sessionStorage.getItem("game_key")}/get_state`)
         let state = await response.json()
-        switch (state){
+        switch (state) {
             case 1:
                 await build_waiting_for_state(2, "Waiting For Host To Start The Game")
                 break
@@ -26,7 +28,7 @@ async function main() {
                 let response = await fetch(`/${sessionStorage.getItem("game_key")}/submitted_introduction`)
                 let player_map = await response.json()
                 player_map = player_map.ready_players
-                player_map.forEach( (item) => {
+                player_map.forEach((item) => {
                     let username = item[0]
                     let ready = item[1]
                     if (username === sessionStorage.getItem("username")) {

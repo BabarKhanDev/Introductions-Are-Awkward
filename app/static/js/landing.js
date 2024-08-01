@@ -46,7 +46,9 @@ async function build_new_game() {
     let username_submit = document.createElement("button")
     username_submit.innerHTML = "Join"
     username_submit.id = "username_submit"
-    username_submit.addEventListener("click", () => {join_game()})
+    username_submit.addEventListener("click", () => {
+        join_game()
+    })
 
     let back_button = document.createElement("button")
     back_button.innerHTML = "Back"

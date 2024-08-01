@@ -1,7 +1,7 @@
 import {build_waiting_for_state} from "./waiting.js";
 import {build_voting_page} from "./voting.js";
 
-export async function build_introductions_page(){
+export async function build_introductions_page() {
 
     //Clear Page
     let main_section = document.getElementById("main")
@@ -18,7 +18,7 @@ export async function build_introductions_page(){
         },
         referrerPolicy: "no-referrer",
         body: JSON.stringify({
-                "username":sessionStorage.getItem("username")
+                "username": sessionStorage.getItem("username")
             }
         ),
     })
