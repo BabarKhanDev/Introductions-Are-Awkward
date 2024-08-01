@@ -8,15 +8,17 @@ from flask_cors import CORS
 from scripts.User import User
 from scripts.GameDatum import GameDatum
 from scripts.GameStates import GameStates
+from scripts.PromptGenerator import PromptGenerator
 
 app = Flask(__name__)
 CORS(app)
-
+prompt_generator = PromptGenerator()
 """
 Game data will store a list of users and a game state
 It will be of the form: string -> GameData
 """
 game_data = {}
+
 
 
 def validate_key(key: string) -> bool:
@@ -113,3 +115,21 @@ def kick_player(key):
     global game_data
     game_data[key].users.remove(request.get_json()["username"])
     return jsonify("success")
+
+
+@app.route('/<key>/get_prompt', methods=["POST"])
+def get_prompt(key):
+
+    if not validate_key(key):
+        return jsonify("Invalid key")
+
+    username = request.get_json()["username"]
+
+    print(username)
+
+    prompt = prompt_generator.prepare_prompt().split()
+    names = game_data[key].users
+    print(names)
+    names.remove(User(username))
+    print(names)
+    return jsonify(" ".join(word.replace("$name", random.choice(names)) for word in prompt))

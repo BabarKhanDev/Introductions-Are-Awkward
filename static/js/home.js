@@ -11,12 +11,12 @@ async function main() {
 
         switch (state){
             case 1:
-                await build_waiting_for_state(2, "Waiting For All Players To Be Ready")
-                build_harvesting_page()
+                await build_waiting_for_state(2, "Waiting For All Players To Join")
+                await build_harvesting_page()
                 break
             case 2:
-                //TODO When we have more states fleshed out
-
+                await build_harvesting_page()
+                break
         }
 
     // If the user has created a game but has not inputted a username yet
@@ -125,9 +125,8 @@ async function build_login() {
 
 async function join_game() {
 
-    let game_key = sessionStorage.getItem("game_key")
     let username = document.getElementById("username_input").value
-    let response = await fetch(`/${game_key}/new_user`, {
+    let response = await fetch(`/${sessionStorage.getItem("game_key")}/new_user`, {
         method: "POST",
         cache: "no-cache",
         headers: {
@@ -135,7 +134,7 @@ async function join_game() {
         },
         referrerPolicy: "no-referrer",
         body: JSON.stringify({
-                "username":username
+                "username":document.getElementById("username_input").value
             }
         ),
     })
@@ -147,7 +146,7 @@ async function join_game() {
     }
     else if (response_msg === "Success") {
         sessionStorage.setItem("username", username)
-        await build_waiting_for_state(2, "Waiting For All Players To Be Ready")
+        await build_waiting_for_state(2, "Waiting For All Players To Join")
         build_harvesting_page()
     } else if (response_msg === "Username Taken") {
         alert("Username is taken, try again")
@@ -162,10 +161,23 @@ async function build_waiting_for_state(state, waiting_text){
 
     let text_element = document.createElement("p")
     text_element.innerHTML = waiting_text
-
     let main_section = document.getElementById("main")
     main_section.innerHTML = ""
-    main_section.appendChild(text_element)
+    main_section.append(text_element)
+
+    if (state === 2) {
+        // TODO if we are player one, put the ready up button here
+
+        let game_key_display = document.createElement("div")
+        game_key_display.id = "game_key_display"
+        game_key_display.innerHTML = `Game Key: ${sessionStorage.getItem("game_key")}`
+        main_section.prepend(game_key_display)
+
+        let player_list = document.createElement("div")
+        player_list.id = "player_list"
+
+        main_section.append(player_list)
+    }
 
     while (true){
         let response = await fetch(`/${sessionStorage.getItem("game_key")}/get_state`)
@@ -175,9 +187,24 @@ async function build_waiting_for_state(state, waiting_text){
             return
         }
 
-        if (state === 1) {
-            // TODO We are waiting for all players to log in, show logged in players
-            // TODO if we are player one, put the ready up button here
+        if (state === 2){
+            // Show the logged in players
+            let response = await fetch(`/${sessionStorage.getItem("game_key")}/all_players`)
+            let players = await response.json()
+
+            let player_list = document.getElementById("player_list")
+            if (players.players.length !== player_list.children.length){
+
+                player_list.innerHTML = ""
+                players.players.forEach((player) => {
+                    let player_name = document.createElement("p")
+                    player_name.innerHTML = player
+                    player_list.append(player_name)
+                })
+
+            }
+
+
         }
 
         await sleep(1000)
@@ -203,7 +230,7 @@ function build_ready_up_button(){
 }
 
 async function submit_ready(){
-    let response = await fetch("/all_ready")
+    let response = await fetch(`/${sessionStorage.getItem("game_key")}/all_ready`)
     let response_msg = await response.json()
     if (response_msg === "success"){
         build_harvesting_page()
@@ -213,9 +240,45 @@ async function submit_ready(){
     }
 }
 
-function build_harvesting_page(){
+async function build_harvesting_page(){
+
+    // Get a prompt
+    let response = await fetch(`/${sessionStorage.getItem("game_key")}/get_prompt`, {
+        method: "POST",
+        cache: "no-cache",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        referrerPolicy: "no-referrer",
+        body: JSON.stringify({
+                "username":sessionStorage.getItem("username")
+            }
+        ),
+    })
+    let prompt = await response.json()
+
+    let prompt_section = document.createElement("p")
+    prompt_section.innerHTML = prompt
+
+    let response_label = document.createElement("label")
+    response_label.innerHTML = "Response"
+
+    let response_input = document.createElement("input")
+    response_input.id = "response_input"
+
+    let prompt_submit = document.createElement("button")
+    prompt_submit.innerHTML = "Submit"
+    prompt_submit.addEventListener("click", () => submit_response())
+
     let main_section = document.getElementById("main")
-    main_section.innerHTML = "Harvesting Time!"
-    // TODO Build harvesting page and api
+    main_section.innerHTML = ""
+    main_section.append(prompt_section)
+}
+
+async function submit_response() {
+    let response = document.getElementById("response_input")
+    //TODO send the response back
+
+    await build_harvesting_page()
 }
 
