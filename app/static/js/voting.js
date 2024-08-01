@@ -88,13 +88,8 @@ export async function build_voting_page() {
         response = await fetch(`/${sessionStorage.getItem("game_key")}/get_round`)
         let round = await response.json()
 
-        await build_waiting_for_state(3 + round.round * 2, "Waiting for all users to submit their votes")
-        if (round.round != 3) {
-            await build_introductions_page()
-        } else {
-            await build_results_page()
-        }
-
+        await build_waiting_for_state(5, "Waiting for all users to submit their votes")
+        await build_results_page()
     })
     voting_area.append(submit_button)
 }
