@@ -1,4 +1,5 @@
 import {build_waiting_for_state} from "./waiting.js";
+import {build_voting_page} from "./voting.js";
 
 export async function build_introductions_page(){
 
@@ -65,12 +66,15 @@ export async function build_introductions_page(){
 
     let prompt_submit = document.createElement("button")
     prompt_submit.textContent = "Submit"
-    prompt_submit.addEventListener("click", () => submit_response())
+    prompt_submit.addEventListener("click", () => submit_introduction_response())
 
     main_section.append(target_user_section, word_section, response_label, response_input, clear_response, prompt_submit)
 }
 
-async function submit_response() {
+async function submit_introduction_response() {
+
+    let response = await fetch(`/${sessionStorage.getItem("game_key")}/get_round`)
+    let round = await response.json()
 
     await fetch(`/${sessionStorage.getItem("game_key")}/submit_introduction`, {
         method: "POST",
@@ -85,7 +89,6 @@ async function submit_response() {
 
     })
 
-    let response = await fetch(`/${sessionStorage.getItem("game_key")}/get_round`)
-    let round = await response.json()
     await build_waiting_for_state(3 + round.round, "Waiting for all users to submit their prompts")
+    await build_voting_page()
 }

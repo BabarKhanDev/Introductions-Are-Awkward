@@ -9,6 +9,10 @@
     --background: #f2fcf2;
 }
 
+h1 {
+    margin-top:0;
+}
+
 #tutorial_modal {
     display:flex;
     flex-direction: column;
@@ -36,17 +40,24 @@
     top:0px;
 }
 
-#tutorial_modal:focus, #tutorial_close:focus {
+#tutorial_modal:focus, #tutorial_buttons *:focus {
     outline: 0px !important;
     border: 0px;
 }
 
-#tutorial_close {
+#tutorial_buttons {
     position: absolute;
     bottom:1em;
     right:1em;
-    background-color: var(--accent);
     height:1.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#tutorial_buttons > * {
+    background-color: var(--accent);
+    margin-left: 0.2em;
 }
 
 .slide {
@@ -60,7 +71,6 @@
     font-size:1.2em;
     position:relative;
 
-    width:50%;
     padding:1em;
 }
 
@@ -70,11 +80,31 @@
     align-items: center;
     justify-content: center;
 
-    height:150%;
-
     border: solid 1px black;
     border-radius:4px;
     padding:1em;
+
+    width:50%;
+    aspect-ratio: 1/1;
+}
+
+@media only screen and (max-width: 900px) {
+    /* For mobile phones: */
+    .tutorial_display_DOM{
+        width:70%;
+    }
+    #tutorial_buttons {
+        left:50%;
+        transform: translate(-50%, -50%);
+
+    }
+}
+
+@media only screen and (min-width: 2000px) {
+    /* For ultra-wide monitors: */
+    .tutorial_display_DOM{
+        width:600px;
+    }
 }
 
 .tutorial_display_DOM>label{
@@ -86,7 +116,7 @@
     font-size:1.4em;
 }
 
-.tutorial_display_DOM *:not(.word_elem, .word_elem_display) {
+.tutorial_display_DOM > *:not(.word_elem, .word_elem_display) {
     padding-bottom: 0.1em;
     margin-bottom: 0.5em;
     width: 100%;
@@ -99,9 +129,8 @@
     justify-content:center;
 
     position: absolute;
-    bottom:1em;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 1em;
+    right: 1em;
     height:1.5em;
 }
 

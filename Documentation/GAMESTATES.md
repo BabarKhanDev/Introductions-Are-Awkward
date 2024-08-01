@@ -60,5 +60,11 @@ That is as follows:
    * You get one point for everybody who guesses your friend correctly, unless everyone guesses correctly, in which case you get 0.
    * You get 1 point if you used more than 3 peoples words in your answer.
 
-5. Final Scores
+5. Making introductions, 2
+6. Guessing The Friend,  2
+
+7. Making introductions, 3
+8. Guessing The Friend,  3
+
+9. Final Scores
     Once all prompts have been guessed we show scores

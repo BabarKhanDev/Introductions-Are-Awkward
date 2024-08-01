@@ -4,6 +4,7 @@ import {build_harvesting_page} from "./harvesting.js";
 import {build_waiting_for_state} from "./waiting.js";
 import {build_introductions_page} from "./introductions.js";
 import {build_voting_page} from "./voting.js";
+import {build_results_page} from "./results.js";
 
 window.onload = async function() {await main();};
 
@@ -22,11 +23,27 @@ async function main() {
             case 2:
                 await build_harvesting_page()
                 break
-            case 3:
-                await build_introductions_page()
+            case 3, 5, 7:
+                let response = await fetch(`/${sessionStorage.getItem("game_key")}/submitted_introduction`)
+                let player_map = await response.json()
+                player_map = player_map.ready_players
+                player_map.forEach( (item) => {
+                    let username = item[0]
+                    let ready = item[1]
+                    if (username === sessionStorage.getItem("username")) {
+                        if (ready) {
+                            build_waiting_for_state(2, "Waiting For Host To Start The Game")
+                        } else {
+                            build_introductions_page()
+                        }
+                    }
+                })
                 break
-            case 4:
+            case 4, 6, 8:
                 await build_voting_page()
+                break
+            case 9:
+                await build_results_page()
                 break
         }
 
@@ -34,12 +51,10 @@ async function main() {
         // User has created a game but has not inputted a username yet
         await build_login()
 
-
     } else {
         // New user
         sessionStorage.setItem("waiting", "false")
         await build_landing()
-
     }
     console.log("Loaded JS")
 }

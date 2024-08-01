@@ -27,7 +27,6 @@ export async function build_harvesting_page(){
         sessionStorage.setItem("clock_interval", my_interval.toString())
     }
 
-
     // Get a prompt
     let response = await fetch(`/${sessionStorage.getItem("game_key")}/get_prompt`, {
         method: "POST",
@@ -57,12 +56,12 @@ export async function build_harvesting_page(){
 
     let prompt_submit = document.createElement("button")
     prompt_submit.innerHTML = "Submit"
-    prompt_submit.addEventListener("click", () => submit_response())
+    prompt_submit.addEventListener("click", () => submit_harvesting_response())
 
     main_section.append(prompt_section, response_label, response_input, prompt_submit)
 }
 
-async function submit_response() {
+async function submit_harvesting_response() {
 
     await fetch(`/${sessionStorage.getItem("game_key")}/submit_prompt_answer`, {
         method: "POST",
