@@ -1,0 +1,10 @@
+dog
+cat
+chicken
+horse
+fish
+bear
+bird
+shark
+lion
+monkey
