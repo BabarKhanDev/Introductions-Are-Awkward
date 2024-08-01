@@ -15,7 +15,6 @@ async function main() {
 
         let response = await fetch(`/${sessionStorage.getItem("game_key")}/get_state`)
         let state = await response.json()
-
         switch (state){
             case 1:
                 await build_waiting_for_state(2, "Waiting For Host To Start The Game")
@@ -23,7 +22,7 @@ async function main() {
             case 2:
                 await build_harvesting_page()
                 break
-            case 3, 5, 7:
+            case 3: case 5: case 7:
                 let response = await fetch(`/${sessionStorage.getItem("game_key")}/submitted_introduction`)
                 let player_map = await response.json()
                 player_map = player_map.ready_players
@@ -32,14 +31,14 @@ async function main() {
                     let ready = item[1]
                     if (username === sessionStorage.getItem("username")) {
                         if (ready) {
-                            build_waiting_for_state(2, "Waiting For Host To Start The Game")
+                            build_waiting_for_state(state+1, "Waiting for all users to submit their prompts")
                         } else {
                             build_introductions_page()
                         }
                     }
                 })
                 break
-            case 4, 6, 8:
+            case 4: case 6: case 8:
                 await build_voting_page()
                 break
             case 9:

@@ -11,7 +11,7 @@ export async function build_voting_page() {
     })
 
     let introductions = await response.json()
-    console.log(introductions)
+    // TODO this is showing the wrong names
 
     let voting_area = document.createElement("div")
     voting_area.id = "voting_area"
@@ -57,6 +57,23 @@ export async function build_voting_page() {
         });
         intro_area.append(intro_elem)
     })
+
+    let submit_button = document.createElement("button")
+    submit_button.id = "voting_submit"
+    submit_button.innerText = "Submit"
+    submit_button.addEventListener("click", () => {
+
+        let names = document.getElementsByClassName("voting_name")
+        let intros = document.getElementsByClassName("voting_intro")
+
+        for (let i = 0; i < names.length; i++) {
+            // TODO send this to flask
+            console.log(names[i].textContent, intros[i].textContent);
+        }
+
+
+    })
+    voting_area.append(submit_button)
 }
 
 function getDragAfterElement(container, x) {
