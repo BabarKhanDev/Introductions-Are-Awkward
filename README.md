@@ -10,7 +10,7 @@ Open a terminal, navigate to the root of this directory and run the following:
 ```
 cd app
 python3 -m venv venv 
-. venv/bin/activate (linux) or ./venv/Scripts/activate (win)
+. venv/bin/activate (linux) or .\venv\Scripts\activate (win)
 python3 -m pip install -r requirements.txt
 flask run
 ```
