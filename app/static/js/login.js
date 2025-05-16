@@ -24,7 +24,7 @@ export async function build_login() {
     username_submit.innerHTML = "Join"
     username_submit.id = "username_submit"
     username_submit.addEventListener("click", () => {
-        sessionStorage.setItem("game_key", document.getElementById("key_input").value);
+        sessionStorage.setItem("game_key", document.getElementById("key_input").value.toUpperCase());
         join_game()
     })
 
