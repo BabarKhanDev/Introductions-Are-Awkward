@@ -200,17 +200,17 @@ button:hover {
 #voting_area {
     width: 100%;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    justify-content: center;
 }
 
 #voting_area > button {
-    align-self: end;
+    align-self: center;
     justify-self: center;
-
 }
 
-#name_area, #intro_area {
-    width: 50%;
+#intro_area {
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -222,22 +222,30 @@ button:hover {
     user-select: none;
 }
 
-.voting_name, .voting_intro {
+.voting_intro {
     width: 70%;
     background-color: var(--button_light);
     text-align: center;
     padding: 0.3em 0 0.3em 0;
     border-radius: 4px;
     margin: 1em 0 1em 0;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 10px 5px 0 var(--shadow-colour);
 }
 
-.voting_intro {
-    cursor: move;
+.voting_intro > p {
+    font-size: 1.1em;
 }
 
-.dragging {
-    opacity: .5;
+.voting_intro > select {
+    font-size: 1em;
+    width:70%;
+    justify-self: center;
 }
+
 
 /* Results Page */
 .results_elem {
