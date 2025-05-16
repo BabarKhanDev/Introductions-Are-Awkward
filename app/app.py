@@ -249,14 +249,14 @@ def ready_for_next_round(key):
     if len(game_data[key].ready_for_next_round) == len(game_data[key].users):
         # Reset all variables besides core and introductions
         game_data[key].state = GameStates.text_harvesting
-        game_data[key].set_timer(61000)
+        game_data[key].set_timer(31000)
         game_data[key].introductions = []
         game_data[key].user_introduction_words_map = {}
         game_data[key].guesses = {}
         game_data[key].ready_for_next_round = set()
 
-        # For testing enable this
-        game_data[key].set_timer(2000)
+        # # For testing enable this
+        # game_data[key].set_timer(2000)
 
     return jsonify("Success")
 
