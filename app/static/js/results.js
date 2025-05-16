@@ -9,6 +9,13 @@ export async function build_results_page() {
     let results = await response.json()
     let scores = results.scores
 
+    let sorted_scores = Object.keys(scores).map(function(key) {
+        return [key, scores[key]]
+    })
+    sorted_scores.sort(function(first, second) {
+        return second[1] - first[1]
+    })
+
     let title = document.createElement("p")
     title.id = "title"
 
@@ -17,14 +24,14 @@ export async function build_results_page() {
         title.textContent = "The Final Results!"
         main_section.append(title)
 
-        await build_results(scores, true, true)
+        await build_results(sorted_scores, true, true)
         return
     }
 
     title.textContent = "The Score So Far!"
     main_section.append(title)
 
-    await build_results(scores, false, false)
+    await build_results(sorted_scores, false, false)
 
     // Tell the server that we are ready to move on
     setTimeout(async () => await alert_results_viewed(), 1000);
@@ -43,8 +50,8 @@ async function build_results(scores, display_numbers, display_confetti) {
 
     let main_section = document.getElementById("main")
 
-    for (let i = 0; i < Object.keys(scores).length; i++) {
-        let username = Object.keys(scores)[i]
+    for (let i = 0; i < scores.length; i++) {
+        let username = scores[i][0]
         await sleep(200)
 
         let results_elem = document.createElement("div")
@@ -71,7 +78,7 @@ async function build_results(scores, display_numbers, display_confetti) {
                 break;
         }
         if (display_numbers) {
-            score_elem.textContent = scores[username]
+            score_elem.textContent = scores[i][1]
 
         } else {
             score_elem.textContent = "?"
