@@ -86,7 +86,7 @@ def all_ready(key):
     game_data[key].set_timer(61000)
 
     # For testing enable this
-    game_data[key].set_timer(2000)
+    # game_data[key].set_timer(2000)
 
     return jsonify("success")
 
