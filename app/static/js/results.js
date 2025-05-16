@@ -17,14 +17,14 @@ export async function build_results_page() {
         title.textContent = "The Final Results!"
         main_section.append(title)
 
-        await build_results(scores, true)
+        await build_results(scores, true, true)
         return
     }
 
     title.textContent = "The Score So Far!"
     main_section.append(title)
 
-    await build_results(scores, false)
+    await build_results(scores, false, false)
 
     // Tell the server that we are ready to move on
     setTimeout(async () => await alert_results_viewed(), 1000);
@@ -35,9 +35,11 @@ export async function build_results_page() {
 
 }
 
-async function build_results(scores, display_numbers) {
+async function build_results(scores, display_numbers, display_confetti) {
 
-    createConfetti()
+    if (display_confetti) {
+        createConfetti()
+    }
 
     let main_section = document.getElementById("main")
 
