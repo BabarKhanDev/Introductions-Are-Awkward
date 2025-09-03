@@ -50,6 +50,8 @@ def new_user(key):
         return jsonify("Invalid Key")
 
     global game_data
+    game_data[key].refresh_expiry()
+
     data = request.get_json()
     username = data["username"]
 
@@ -70,6 +72,8 @@ def get_state(key):
         return jsonify("Invalid key")
 
     global game_data
+    game_data[key].refresh_expiry()
+
     return jsonify(game_data[key].state.value)
 
 
@@ -82,11 +86,9 @@ def all_ready(key):
         return jsonify("Invalid key")
 
     global game_data
+    game_data[key].refresh_expiry()
     game_data[key].state = GameStates.text_harvesting
     game_data[key].set_timer(61000)
-
-    # For testing enable this
-    # game_data[key].set_timer(2000)
 
     return jsonify("success")
 
@@ -97,6 +99,7 @@ def timer_remaining(key):
         return jsonify("Invalid key")
 
     global game_data
+    game_data[key].refresh_expiry()
     time_remaining = game_data[key].timer_remaining()
     if not time_remaining > 0:
         game_data[key].state = GameStates.making_introductions
@@ -110,6 +113,7 @@ def all_players(key):
         return jsonify("Invalid key")
 
     global game_data
+    game_data[key].refresh_expiry()
     return jsonify({"players": game_data[key].users})
 
 
@@ -119,6 +123,7 @@ def kick_player(key):
         return jsonify("Invalid key")
 
     global game_data
+    game_data[key].refresh_expiry()
     game_data[key].users.remove(request.get_json()["username"])
     return jsonify("success")
 
@@ -127,6 +132,9 @@ def kick_player(key):
 def get_prompt(key):
     if not validate_key(key):
         return jsonify("Invalid key")
+
+    global game_data
+    game_data[key].refresh_expiry()
 
     username = request.get_json()["username"]
     prompt = prompt_generator.prepare_prompt().split()
@@ -149,6 +157,7 @@ def submit_prompt_answer(key):
     target_user = request.get_json()["target_user"]
 
     global game_data
+    game_data[key].refresh_expiry()
     game_data[key].add_words(target_user, response)
 
     return jsonify("Success")
@@ -160,6 +169,7 @@ def sample_words(key):
         return jsonify('Invalid key')
 
     global game_data
+    game_data[key].refresh_expiry()
     username = request.get_json()["username"]
     if username in game_data[key].user_introduction_words_map:
         return game_data[key].user_introduction_words_map[username]
@@ -192,6 +202,7 @@ def submit_introduction(key):
     introduction = request.get_json()["introduction"]
 
     global game_data
+    game_data[key].refresh_expiry()
     game_data[key].add_introduction(Introduction(username, target_player, introduction))
 
     if len(game_data[key].introductions) == len(game_data[key].users):
@@ -206,6 +217,7 @@ def get_round(key):
         return jsonify('Invalid key')
 
     global game_data
+    game_data[key].refresh_expiry()
     return jsonify({"round": game_data[key].round})
 
 
@@ -215,6 +227,7 @@ def submitted_introduction(key):
         return jsonify('Invalid key')
 
     global game_data
+    game_data[key].refresh_expiry()
 
     # Has the user submitted as many introductions as there have been rounds
     # i.e. have they submitted one for the most recent round
@@ -232,6 +245,7 @@ def submitted_votes(key):
         return jsonify('Invalid key')
 
     global game_data
+    game_data[key].refresh_expiry()
     guessed = game_data[key].guesses.keys()
     out = [(username, username in guessed) for username in game_data[key].users]
     return jsonify({"ready_players": out})
@@ -244,6 +258,7 @@ def ready_for_next_round(key):
 
     username = request.get_json()["username"]
     global game_data
+    game_data[key].refresh_expiry()
     game_data[key].ready_for_next_round.add(username)
 
     if len(game_data[key].ready_for_next_round) == len(game_data[key].users):
@@ -267,6 +282,7 @@ def all_introductions(key):
         return jsonify('Invalid key')
 
     global game_data
+    game_data[key].refresh_expiry()
     username = request.get_json()["username"]
 
     # We don't want to send users their own introduction
@@ -289,6 +305,7 @@ def submit_guess(key):
         return jsonify('Invalid key')
 
     global game_data
+    game_data[key].refresh_expiry()
     username = request.get_json()["username"]
     guesses = request.get_json()["guesses"]
     game_data[key].guesses[username] = guesses
@@ -332,6 +349,7 @@ def get_scores(key):
         return jsonify('Invalid key')
 
     global game_data
+    game_data[key].refresh_expiry()
     return jsonify({
         "scores": game_data[key].scores,
         "round": game_data[key].round

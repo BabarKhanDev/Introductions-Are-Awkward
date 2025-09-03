@@ -4,6 +4,7 @@ from app.scripts.Introduction import Introduction
 import time
 import math
 import random
+from datetime import datetime, timedelta
 
 
 class GameDatum:
@@ -30,6 +31,9 @@ class GameDatum:
 
         # Results
         self.ready_for_next_round = set()
+
+        # Game expiry
+        self.time_to_expire_game = datetime.now() + timedelta(minutes=10)
 
     def add_user(self, user: str) -> None:
         self.users += [user]
@@ -73,3 +77,9 @@ class GameDatum:
     def add_introduction(self, introduction: Introduction) -> None:
         if introduction.username not in {intro.username for intro in self.introductions}:
             self.introductions.append(introduction)
+
+    def refresh_expiry(self):
+        self.time_to_expire_game = datetime.now() + timedelta(minutes=2)
+
+    def is_expired(self) -> bool:
+        return datetime.now() >= self.time_to_expire_game
