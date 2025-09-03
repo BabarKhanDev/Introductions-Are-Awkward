@@ -9,10 +9,10 @@ What is $name's go to pickup line?
 What is $name's favourite thing about $name
 You wake up as $name, what is the first thing you do?
 What is the most embarrassing thing that $name has ever done?
-What is $name’s dream job and why?
+What is $name's dream job and why?
 If $name could go to any country, where would they go and what would they do there?
 What is the best advice that $name has ever received or given?
-What is $name’s biggest fear?
+What is $name's biggest fear?
 What is something that $name is great at and something that they are terrible at?
 If $name had a superpower, what would it be and how would they use it?
-What is $name’s secret talent or hobby?
+What is $name's secret talent or hobby?
