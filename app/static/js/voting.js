@@ -3,7 +3,7 @@ import {build_results_page} from "./results.js";
 
 export async function build_voting_page() {
     let main_section = document.getElementById("main")
-    main_section.innerHTML = "Please drag the introduction to the matching player"
+    main_section.innerHTML = "Please select the player that you think matches the introduction"
 
     // Get all introductions
     let response = await fetch(`/${sessionStorage.getItem("game_key")}/all_introductions`, {
