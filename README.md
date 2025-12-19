@@ -25,7 +25,6 @@ docker run -d --name introductions_are_awkward -p 5001:5001 introductions_are_aw
 ```
 
 ## Goals of this project and what I hope to learn
-
-1. How to design UIs that look good
-2. How to create websites that work well on mobile and desktop
-3. How to host a website for anyone to use
+- [x] How to design UIs that look good
+- [x] How to create websites that work well on mobile and desktop
+- [x] How to host a publicly facing website
