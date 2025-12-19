@@ -21,7 +21,7 @@ Open a terminal, navigate to the root of this directory and run the following:
 
 ```
 docker build -t introductions_are_awkward .
-docker run -d --name introductions_are_awkward -p 8080:8080 introductions_are_awkward
+docker run -d --name introductions_are_awkward -p 5001:5001 introductions_are_awkward
 ```
 
 ## Goals of this project and what I hope to learn

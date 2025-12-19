@@ -6,5 +6,5 @@ RUN rm /tmp/requirements.txt
 COPY app /app
 WORKDIR /app
 
-EXPOSE 8080
-CMD ["flask", "run", "-p", "8080", "--host", "0.0.0.0"]
+EXPOSE 5001
+CMD ["flask", "run", "-p", "5001", "--host", "0.0.0.0"]
