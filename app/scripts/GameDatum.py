@@ -1,5 +1,5 @@
-from app.scripts.GameStates import GameStates
-from app.scripts.Introduction import Introduction
+from scripts.GameStates import GameStates
+from scripts.Introduction import Introduction
 
 import time
 import math

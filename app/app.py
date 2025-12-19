@@ -3,10 +3,10 @@ from flask_cors import CORS
 import random
 import string
 
-from app.scripts.GameDatum import GameDatum
-from app.scripts.GameStates import GameStates
-from app.scripts.PromptGenerator import PromptGenerator
-from app.scripts.Introduction import Introduction
+from scripts.GameDatum import GameDatum
+from scripts.GameStates import GameStates
+from scripts.PromptGenerator import PromptGenerator
+from scripts.Introduction import Introduction
 
 app = Flask(__name__)
 CORS(app)

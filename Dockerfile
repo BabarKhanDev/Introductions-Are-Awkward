@@ -13,4 +13,9 @@ RUN chown -R appuser:appuser /app
 USER appuser
 
 EXPOSE 5001
-CMD ["flask", "run", "-p", "5001", "--host", "0.0.0.0"]
+CMD ["gunicorn", \
+     "--bind", "0.0.0.0:5001", \
+     "--workers", "2", \
+     "--threads", "2", \
+     "--timeout", "30", \
+     "app:app"]
