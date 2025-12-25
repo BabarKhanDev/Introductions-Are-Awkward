@@ -70,7 +70,7 @@ export async function join_game() {
         sessionStorage.setItem("initialUser", "false")
         document.getElementById("tutorial_modal").remove()
         document.getElementById("tutorial_modal_blur").remove()
-        await build_waiting_for_state(2, "Waiting For All Players To Join")
+        await build_waiting_for_state(2, "Waiting For Host To Start The Game")
         await build_harvesting_page()
     } else if (response_msg === "Username Taken") {
         alert("Username is taken, try again")
